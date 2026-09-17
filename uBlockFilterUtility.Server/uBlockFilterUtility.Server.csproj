@@ -7,6 +7,7 @@
     <SpaRoot>..\ublockfilterutility.client</SpaRoot>
     <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:61077</SpaProxyServerUrl>
+    <UserSecretsId>0a706cbd-ba01-40e0-8b6c-b858b987c33e</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

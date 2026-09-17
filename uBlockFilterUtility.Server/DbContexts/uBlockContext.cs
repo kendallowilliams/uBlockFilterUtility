@@ -5,12 +5,15 @@ namespace uBlockFilterUtility.DbContexts
 {
     public class uBlockContext : DbContext
     {
+        public uBlockContext(DbContextOptions options) : base(options)
+        {
+        }
+
         public DbSet<Filter> Filters { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlite("Data Source=Data/uBlock.db");
+            base.OnConfiguring(builder);
         }
     }
 }
