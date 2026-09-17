@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="ublockfilterutility.client/ublockfilterutility.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="uBlockFilterUtility.Server/uBlockFilterUtility.Server.csproj" />
+</Solution>

@@ -1,0 +1,47 @@
+<div class="container h-100">
+    @let selectedFilter = $selectedFilter | async;
+    <div class="row h-100">
+        <div class="col-4 border-end">
+            <div class="d-flex">
+                <h4 class="flex-fill">uBlock Filters</h4>
+                <div class="d-flex gap-1">
+                    <a class="btn btn-secondary btn-sm" href="/Filter/Generate" download="filters.txt"><fa-icon [icon]="faFileExport"></fa-icon></a>
+                    <button type="button" class="btn btn-sm btn-primary" (click)="handleAdd()" [disabled]="isLoading">
+                        <fa-icon [icon]="faPlus"></fa-icon>
+                    </button>
+                </div>
+            </div>
+            <hr />
+            <div>
+                @let filters = $filters | async;
+                <select class="form-select" [ngModel]="selectedFilter" (ngModelChange)="$selectedFilter.next($event)" [disabled]="isLoading">
+                    <option [ngValue]="null">Select a filter</option>
+                    @for (filter of filters; track filter)
+                    {
+                        <option [ngValue]="filter">{{filter.Name}}</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col d-flex flex-column">
+            @if (selectedFilter) {
+                <app-filter class="flex-fill" [filter]="selectedFilter"></app-filter>
+                <hr />
+                <div class="d-flex gap-1 justify-content-end">
+                    <button type="button" class="btn btn-secondary" (click)="handleCopy()" [disabled]="isLoading">
+                        <fa-icon [icon]="faCopy"></fa-icon>
+                    </button>
+                    <button type="button" class="btn btn-secondary" (click)="handlePreview()" [disabled]="isLoading">
+                        <fa-icon [icon]="faEye"></fa-icon>
+                    </button>
+                    <button type="button" class="btn btn-primary" (click)="handleSave()" [disabled]="isLoading">
+                        <fa-icon [icon]="faSave"></fa-icon>
+                    </button>
+                    <button type="button" class="btn btn-danger" (click)="handleDelete()" [disabled]="isLoading">
+                        <fa-icon [icon]="faTrash"></fa-icon>
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
