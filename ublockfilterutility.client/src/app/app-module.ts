@@ -9,10 +9,9 @@ import { FilterComponent } from './components/filter/filter.component';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { FilterModalComponent } from './components/modals/filter-modal/filter-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FilterService } from '../shared/services/filter.service';
+import { FilterService } from './shared/services/filter.service';
 import { ConfirmModalComponent } from './components/modals/confirm-modal/confirm-modal.component';
 import { FilterParameterComponent } from './components/filter/filter-parameter/filter-parameter.component';
-import { APP_BASE_HREF } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -34,14 +33,7 @@ import { APP_BASE_HREF } from '@angular/common';
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(withInterceptorsFromDi()),
-    FilterService, {
-      provide: APP_BASE_HREF,
-      useFactory: () => {
-        const segments = window.location.pathname.split('/').filter(Boolean);
-        const path = segments.length > 0 ? `${segments[0]}/` : '/';
-        return `/${path}`;
-      }
-    }
+    FilterService
   ],
   bootstrap: [AppComponent],
 })
