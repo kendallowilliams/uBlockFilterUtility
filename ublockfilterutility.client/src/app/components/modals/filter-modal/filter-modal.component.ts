@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FilterModel } from '../../../../shared/models/filter.model';
+import { FilterModel } from '../../../shared/models/filter.model';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({

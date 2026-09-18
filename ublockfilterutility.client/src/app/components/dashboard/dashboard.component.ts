@@ -1,9 +1,9 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { faCopy, faEye, faFileExport, faPlus, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FilterModel } from '../../../shared/models/filter.model';
+import { FilterModel } from '../../shared/models/filter.model';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { FilterModalComponent } from '../modals/filter-modal/filter-modal.component';
-import { FilterService } from '../../../shared/services/filter.service';
+import { FilterService } from '../../shared/services/filter.service';
 import { ConfirmModalComponent } from '../modals/confirm-modal/confirm-modal.component';
 import { BehaviorSubject, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
