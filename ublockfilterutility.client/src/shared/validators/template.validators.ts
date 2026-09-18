@@ -1,5 +1,6 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { FilterParameter } from '../models/param.model';
+import { ArrayUtils } from '../utils/array.utils';
 
 export function missingParameters(paramFn: () => FilterParameter[]): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -19,8 +20,8 @@ function hasMissingParameters(template: string, params: FilterParameter[]): bool
 export function getMissingParameters(template: string, params: FilterParameter[]): string[] {
     if (!template || !params) return [];
 
-    const requiredKeys = template.match(/(?<=\{).*?(?=\})/g);
+    const requiredKeys = ArrayUtils.removeDuplicates(template.match(/(?<=\{).*?(?=\})/g) || []).sort();
     const existingKeys = params.map(p => p.key);
-    
-    return requiredKeys?.filter(key => !existingKeys?.includes(key)).map(key => key) ?? [];
+
+    return requiredKeys.filter(key => !existingKeys?.includes(key)).map(key => key);
 }
