@@ -37,10 +37,9 @@ import { APP_BASE_HREF } from '@angular/common';
     FilterService, {
       provide: APP_BASE_HREF,
       useFactory: () => {
-        const path = window.location.pathname.split('/')[0] || 0;
+        const path = window.location.pathname.split('/')[0] || '/';
         return `/${path}`;
-      },
-      deps: [window]
+      }
     }
   ],
   bootstrap: [AppComponent],
