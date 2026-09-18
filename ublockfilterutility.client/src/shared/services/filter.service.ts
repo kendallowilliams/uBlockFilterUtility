@@ -1,13 +1,15 @@
 import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { FilterModel } from "../models/filter.model";
+import { APP_BASE_HREF } from "@angular/common";
 
 @Injectable({
     providedIn: 'root'
 })
 export class FilterService {
-    private readonly apiUrl = '/Filter';
+    private readonly baseUrl = inject(APP_BASE_HREF);
+    private readonly apiUrl = `${this.baseUrl}/Filter`;
 
     constructor(private http: HttpClient) {}
 
