@@ -9,7 +9,7 @@ import { APP_BASE_HREF } from "@angular/common";
 })
 export class FilterService {
     private readonly baseUrl = inject(APP_BASE_HREF);
-    private readonly apiUrl = `${this.baseUrl}/Filter`;
+    private readonly apiUrl = `${this.baseUrl}Filter`;
 
     constructor(private http: HttpClient) {}
 
