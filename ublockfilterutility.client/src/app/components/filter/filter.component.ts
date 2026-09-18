@@ -1,10 +1,10 @@
 import { Component, DestroyRef, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges } from "@angular/core";
-import { FilterModel } from "../../shared/models/filter.model";
+import { FilterModel } from "../../../shared/models/filter.model";
 import { faEraser, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FilterParameter } from "../../shared/models/param.model";
-import { getMissingParameters, missingParameters } from "../../shared/validators/template.validators";
+import { FilterParameter } from "../../../shared/models/param.model";
+import { getMissingParameters, missingParameters } from "../../../shared/validators/template.validators";
 
 @Component({
     selector: 'app-filter',
