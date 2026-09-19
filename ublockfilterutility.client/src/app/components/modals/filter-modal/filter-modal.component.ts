@@ -18,8 +18,8 @@ export class FilterModalComponent implements OnInit,OnDestroy {
     constructor(protected modalRef: BsModalRef) {}
 
     public ngOnInit(): void {
-        this.filter = this.filter ?? {};
-        this.isCopy = !!this.filter.Id;
+        this.isCopy = !!this.filter?.Id;
+        this.filter = Object.assign({}, this.filter);
         this.filter.Id = this.filter.Name = null;
     }
     
