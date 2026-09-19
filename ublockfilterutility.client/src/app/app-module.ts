@@ -38,7 +38,7 @@ import { APP_BASE_HREF } from '@angular/common';
       provide: APP_BASE_HREF,
       useFactory: () => {
         const segments = window.location.pathname.split('/').filter(Boolean);
-        return segments.length > 0 ? `${segments[0]}/` : '/';
+        return segments.length > 0 ? `/${segments[0]}/` : '/';
       }
     }
   ],
