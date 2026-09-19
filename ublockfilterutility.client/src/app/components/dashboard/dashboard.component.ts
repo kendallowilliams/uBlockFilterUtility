@@ -67,6 +67,7 @@ export class DashboardComponent implements OnInit {
             .subscribe(filter => {
                 const fIndex = this.filters!.findIndex(f => f.Id === filter.Id);
                 this.filters!.splice(fIndex, 1, filter);
+                this.$selectedFilter.next(filter);
                 this.isLoading = false;
             });
     }
