@@ -12,6 +12,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterService } from './shared/services/filter.service';
 import { ConfirmModalComponent } from './components/modals/confirm-modal/confirm-modal.component';
 import { FilterParameterComponent } from './components/filter/filter-parameter/filter-parameter.component';
+import { APP_BASE_HREF } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,14 @@ import { FilterParameterComponent } from './components/filter/filter-parameter/f
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(withInterceptorsFromDi()),
-    FilterService
+    FilterService, {
+      provide: APP_BASE_HREF,
+      useFactory: () => {
+        const segments = window.location.pathname.split('/').filter(Boolean);
+        const path = segments.length > 0 ? `${segments[0]}/` : '/';
+        return `/${path}`;
+      }
+    }
   ],
   bootstrap: [AppComponent],
 })
