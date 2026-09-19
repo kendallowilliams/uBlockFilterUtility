@@ -12,6 +12,7 @@ import { FilterService } from './shared/services/filter.service';
 import { ConfirmModalComponent } from './components/modals/confirm-modal/confirm-modal.component';
 import { FilterParameterComponent } from './components/filter/filter-parameter/filter-parameter.component';
 import { APP_BASE_HREF } from '@angular/common';
+import { ModalDirective } from './components/modals/directives/modal.directive';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { APP_BASE_HREF } from '@angular/common';
     ModalModule,
     FormsModule,
     ReactiveFormsModule,
+    ModalDirective
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),

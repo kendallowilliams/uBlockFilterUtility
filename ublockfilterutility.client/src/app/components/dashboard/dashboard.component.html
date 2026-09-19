@@ -1,3 +1,10 @@
+@let isLoading = ($isLoading | async) || false;
+
+<ng-template appModal [isOpen]="isLoading" [options]="{backdrop: 'static'}">
+    <div class="modal-body">
+        <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
+    </div>
+</ng-template>
 <div class="container h-100">
     @let selectedFilter = $selectedFilter | async;
     <div class="row h-100">

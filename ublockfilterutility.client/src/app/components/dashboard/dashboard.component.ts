@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { faCopy, faEye, faFileExport, faPlus, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faEye, faFileExport, faPlus, faSave, faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FilterModel } from '../../shared/models/filter.model';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { FilterModalComponent } from '../modals/filter-modal/filter-modal.component';
 import { FilterService } from '../../shared/services/filter.service';
 import { ConfirmModalComponent } from '../modals/confirm-modal/confirm-modal.component';
@@ -23,7 +23,8 @@ export class DashboardComponent implements OnInit {
     protected faEye = faEye;
     protected faPlus = faPlus;
     protected faFileExport = faFileExport;
-    protected isLoading = false;
+    protected faSpinner = faSpinner;
+    protected $isLoading = new BehaviorSubject<boolean>(false);
 
     private destroyRef = inject(DestroyRef);
     private filters: FilterModel[] = [];
@@ -31,14 +32,14 @@ export class DashboardComponent implements OnInit {
     constructor(private bsModal: BsModalService, private filterService: FilterService) {}
     
     public ngOnInit(): void {
-        this.isLoading = true;
+        this.$isLoading.next(true);
         this.$filters
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(filters => this.filters = filters);
         this.filterService.getFilters()
             .pipe(tap(filters => {
                 this.$filters.next(filters);
-                this.isLoading = false;
+                this.$isLoading.next(false);
             }))
             .subscribe();
     }
@@ -51,24 +52,24 @@ export class DashboardComponent implements OnInit {
 
       modalRef.content?.addFilter
         .subscribe(filter => {
-            this.isLoading = true;
+            this.$isLoading.next(true);
             this.filterService.addFilter(filter!)
                 .subscribe(filter => {
                     this.updateFilters([...this.filters!, filter]);
                     this.$selectedFilter.next(filter);
-                    this.isLoading = false;
+                    this.$isLoading.next(false);
                 });
         });
     }
 
     protected handleSave(): void {
-        this.isLoading = true;
+        this.$isLoading.next(true);
         this.filterService.updateFilter(this.$selectedFilter.getValue()!)
             .subscribe(filter => {
                 const fIndex = this.filters!.findIndex(f => f.Id === filter.Id);
                 this.filters!.splice(fIndex, 1, filter);
                 this.$selectedFilter.next(filter);
-                this.isLoading = false;
+                this.$isLoading.next(false);
             });
     }
 
@@ -83,12 +84,12 @@ export class DashboardComponent implements OnInit {
 
       modalRef.content?.copyFilter
         .subscribe(filter => {
-            this.isLoading = true;
+            this.$isLoading.next(true);
             this.filterService.addFilter(filter!)
                 .subscribe(filter => {
                     this.updateFilters([...this.filters!, filter]);
                     this.$selectedFilter.next(filter);
-                    this.isLoading = false;
+                    this.$isLoading.next(false);
                 });
         });
     }
@@ -96,11 +97,11 @@ export class DashboardComponent implements OnInit {
     protected handlePreview(): void {
         const id = this.$selectedFilter.getValue()?.Id!;
 
-        //this.isLoading = true;
+        this.$isLoading.next(true);
         this.filterService.getPreview(id)
             .subscribe(preview => {
                 console.info(preview);
-                //this.isLoading = false;
+                this.$isLoading.next(false);
             });
     }
 
@@ -120,13 +121,13 @@ export class DashboardComponent implements OnInit {
 
         modalRef.content?.confirm
             .subscribe(() => {
-                this.isLoading = true;
+                this.$isLoading.next(true);
                 this.filterService.deleteFilter(idToDelete)
                     .subscribe(isDeleted => {
                         if (isDeleted) {
                             this.$selectedFilter.next(null);
                             this.updateFilters(this.filters!.filter(f => f.Id !== idToDelete));
-                            this.isLoading = false
+                            this.$isLoading.next(false);
                         }
                     });
             });
