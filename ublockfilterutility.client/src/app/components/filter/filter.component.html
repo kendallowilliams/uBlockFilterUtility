@@ -40,25 +40,33 @@
             <h5>Parameters</h5>
         </div>
         <div class="col">
-            <div class="input-group">
+            <div class="input-group" [formGroup]="paramForm!">
                 <div class="form-floating">
-                    <input type="text" class="form-control" id="param-key" required [(ngModel)]="paramKey"
-                        [ngModelOptions]="{standalone: true}" [ngClass]="{'is-invalid': paramValue && !paramKey}"
-                        [disabled]="paramKeyDisabled" />
-                    <label for="param-key">Name</label>
+                    @let keyControl = paramForm?.controls['Key'];
+                    <input type="text" class="form-control" id="param-key" required
+                        formControlName="Key" [ngClass]="{'is-invalid': !keyControl!.valid && keyControl!.touched}" />
+                    <label for="param-key">
+                        @if (paramForm?.controls['Key'].errors?.['duplicate']) {
+                            <span>Key already exists!</span>
+                        } @else {
+                            <span>Name</span>
+                        }
+                    </label>
                 </div>
+                
                 <div class="form-floating">
-                    <input type="text" class="form-control" id="param-value" required [(ngModel)]="paramValue"
-                        [ngModelOptions]="{standalone: true}" [ngClass]="{'is-invalid': paramKey && !paramValue}" />
+                    @let valueControl = paramForm?.controls['Value'];
+                    <input type="text" class="form-control" id="param-value" required 
+                        [ngClass]="{'is-invalid': !valueControl!.valid && valueControl!.touched}"
+                        formControlName="Value" />
                     <label for="param-value">Value</label>
                 </div>
-                @if (paramKey || paramValue) {
+                @if (paramForm?.dirty) {
                     <button type="button" class="btn btn-secondary" (click)="handleParamClear()">
                         <fa-icon [icon]="faEraser"></fa-icon>
                     </button>
                 }
-                <button type="button" class="btn btn-primary" (click)="handleParamAdd(paramKey!, paramValue!)"
-                    [disabled]="!paramKey || !paramValue">
+                <button type="button" class="btn btn-primary" (click)="handleParamAdd()" [disabled]="!paramForm?.valid">
                     <fa-icon [icon]="faPlus"></fa-icon>
                 </button>
             </div>

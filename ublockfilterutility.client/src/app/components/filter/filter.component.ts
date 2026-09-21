@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { FilterModel, FilterModelForm } from "../../shared/models/filter.model";
 import { faEraser, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FormGroup } from "@angular/forms";
-import { FilterParameter } from "../../shared/models/param.model";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { FilterParameter, FilterParameterForm } from "../../shared/models/param.model";
+import { uniqueKey } from "../../shared/validators/parameter.validators";
 
 @Component({
     selector: 'app-filter',
@@ -16,41 +17,45 @@ export class FilterComponent implements OnInit {
     protected faTrash = faTrash;
     protected faEraser = faEraser;
     protected parameters: FilterParameter[] = [];
-    protected paramKey?: string | null;
-    protected paramValue?: string | null;
     protected missingParams?: string;
-    protected paramKeyDisabled = false;
+    protected paramForm: FormGroup<FilterParameterForm> | null = null;
+
+    constructor(private fb: FormBuilder) {}
 
     public ngOnInit(): void {
-        const filter = <FilterModel>this.form?.getRawValue();
+        const filter = this.form?.getRawValue() as FilterModel;
         this.displayParams(filter?.Parameters);
+        this.paramForm = this.fb.group<FilterParameterForm>({
+            Key: this.fb.control(null, uniqueKey(() => this.parameters)),
+            Value: this.fb.control(null)
+        });
     }
 
-    protected handleParamAdd(key: string, value: string): void {
+    protected handleParamAdd(): void {
         const control = this.form?.controls['Parameters']!;
+        const paramKey = this.paramForm?.controls['Key'].value!;
+        const paramValue = this.paramForm?.controls['Value'].value!;
         this.parameters = this.parameters
-            .filter(p => p.key !== key)
-            .concat({key, value})
+            .filter(p => p.key !== paramKey)
+            .concat({key: paramKey, value: paramValue})
             .sort((pThis, pThat) => pThis.key.localeCompare(pThat.key));
-        this.paramKey = this.paramValue = null;
-        this.paramKeyDisabled = false;
         control.setValue(
-            Object.assign({}, {[key]: value}, control.value)
+            Object.assign({}, {[paramKey]: paramValue}, control.value)
         );
         control.markAsTouched();
         control.markAsDirty();
+        this.handleParamClear();
     }
 
     protected handleParamClear(): void {
-        this.paramKey = this.paramValue = null;
-        this.paramKeyDisabled = false;
+        this.paramForm?.reset();
+        this.paramForm?.controls['Key'].enable();
     }
 
     protected handleParamEdit(param: FilterParameter): void {
         this.handleParamRemove(param.key);
-        this.paramKey = param.key;
-        this.paramValue = param.value;
-        this.paramKeyDisabled = true;
+        this.paramForm?.reset({Key: param.key, Value: param.value});
+        this.paramForm?.controls['Key'].disable();
     }
 
 

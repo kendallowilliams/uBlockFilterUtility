@@ -3,11 +3,10 @@ import { FilterParameter } from '../models/param.model';
 import { ArrayUtils } from '../utils/array.utils';
 
 export function missingParameters(paramFn: () => FilterParameter[]): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-        return hasMissingParameters(control.value, paramFn?.()) 
+    return (control: AbstractControl): ValidationErrors | null => 
+        hasMissingParameters(control.value, paramFn?.()) 
             ? {missingParameters: getMissingParameters(control.value, paramFn?.()).join(', ')} 
-            : null
-    }
+            : null;
 }
 
 function hasMissingParameters(template: string, params: FilterParameter[]): boolean {
