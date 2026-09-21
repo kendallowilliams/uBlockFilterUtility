@@ -15,6 +15,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { missingParameters } from '../../shared/validators/template.validators';
 import { FilterComponent } from '../filter/filter.component';
 import { FilterParameter } from '../../shared/models/param.model';
+import * as uuid from 'uuid';
 
 @Component({
     selector: 'app-dashboard',
@@ -223,5 +224,5 @@ export class DashboardComponent implements OnInit {
         }
     }
 
-    private generateLocalId: () => string = (): string => `_${crypto.randomUUID()}`;
+    private generateLocalId: () => string = (): string => `_${uuid.v4()}`;
 }
