@@ -1,0 +1,77 @@
+<form class="needs-validation" novalidate [formGroup]="form!">
+    <input type="hidden" formControlName="Id" />
+    @if (isEdit)
+    {
+        <h4 class="fst-italic">{{form?.controls?.['Name'].value}}</h4>
+        <input type="hidden" formControlName="Name" />
+        <hr />
+    } @else {
+        <div class="form-floating mb-3">
+            @let nameControl = form?.controls?.['Name'];
+            @let nameErrors = nameControl?.errors;
+            <input type="text" class="form-control" required id="filter-name" formControlName="Name"
+                [ngClass]="{'is-invalid': nameErrors && form?.touched}" />
+            <label for="filter-name">Name</label>
+            <div class="invalid-feedback">
+                @if (nameErrors?.['required']) {
+                    Name Required!
+                }
+            </div>
+        </div>
+    }
+    <div class="form-floating mb-3">
+        @let templateControl = form?.controls?.['Template'];
+        @let templateErrors = templateControl?.errors;
+        <textarea class="form-control resize-none" required id="filter-template" [style.height]="'200px'"
+            formControlName="Template" [ngClass]="{'is-invalid': templateErrors && form?.touched}"
+            spellcheck="false"></textarea>
+        <label for="filter-template">Template</label>
+        <div class="invalid-feedback">
+            @let missingParamsError = templateErrors?.['missingParameters'];
+            @if (missingParamsError) {
+                <div>Missing Parameters: {{missingParamsError}}</div>
+            } @else if (templateErrors?.['required']) {
+                <div>Template Required!</div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2 border-end">
+            <h5>Parameters</h5>
+        </div>
+        <div class="col">
+            <div class="input-group">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="param-key" required [(ngModel)]="paramKey"
+                        [ngModelOptions]="{standalone: true}" [ngClass]="{'is-invalid': paramValue && !paramKey}"
+                        [disabled]="paramKeyDisabled" />
+                    <label for="param-key">Name</label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="param-value" required [(ngModel)]="paramValue"
+                        [ngModelOptions]="{standalone: true}" [ngClass]="{'is-invalid': paramKey && !paramValue}" />
+                    <label for="param-value">Value</label>
+                </div>
+                @if (paramKey || paramValue) {
+                    <button type="button" class="btn btn-secondary" (click)="handleParamClear()">
+                        <fa-icon [icon]="faEraser"></fa-icon>
+                    </button>
+                }
+                <button type="button" class="btn btn-primary" (click)="handleParamAdd(paramKey!, paramValue!)"
+                    [disabled]="!paramKey || !paramValue">
+                    <fa-icon [icon]="faPlus"></fa-icon>
+                </button>
+            </div>
+            <input type="hidden" formControlName="Parameters" />
+            @if (parameters?.length > 0) {
+                <hr />
+                <div class="d-flex flex-wrap gap-1" id="param-group">
+                    @for (param of parameters; track param?.key) {
+                        <app-filter-parameter [param]="param" (paramRemove)="handleParamRemove(param.key)"
+                            (paramEdit)="handleParamEdit(param)"></app-filter-parameter>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</form>

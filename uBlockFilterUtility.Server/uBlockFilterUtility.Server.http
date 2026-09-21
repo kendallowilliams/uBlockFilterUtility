@@ -1,0 +1,6 @@
+@uBlockFilterUtility.Server_HostAddress = http://localhost:5160
+
+GET {{uBlockFilterUtility.Server_HostAddress}}/Filter/Generate
+Accept: text/plain
+
+###

@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">{{isCopy ? 'Copy' : 'Add'}} Filter</h4>
+    <button type="button" class="btn-close close pull-right" (click)="modalRef?.hide()">
+        <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <app-filter [form]="form" [isEdit]="false"></app-filter>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modalRef?.hide()">Cancel</button>
+    <button type="button" class="btn btn-primary" #btnSubmit [disabled]="!form?.valid" (click)="handleAdd()">{{isCopy ? 'Copy' : 'Add'}}</button>
+</div>

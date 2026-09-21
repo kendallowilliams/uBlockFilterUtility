@@ -1,0 +1,57 @@
+<ng-template appModal [isOpen]="isLoading()" [options]="{backdrop: 'static', class:'modal-fullscreen opacity-50'}">
+    <div class="d-flex h-100 justify-content-center align-items-center">
+        <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
+    </div>
+</ng-template>
+<div class="container h-100 d-flex flex-column">
+    <div class="row">
+        <div class="col">
+            <div class="d-flex">
+                <h4 class="flex-fill">uBlock Filter Utility</h4>
+                <div class="d-flex gap-1">
+                    <a class="btn btn-secondary btn-sm" [href]="exportUrl" download="filters.txt"><fa-icon [icon]="faFileExport"></fa-icon></a>
+                    <button type="button" class="btn btn-sm btn-primary" (click)="handleAdd()" [disabled]="isLoading()">
+                        <fa-icon [icon]="faPlus"></fa-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="row flex-fill">
+        <div class="col-4 border-end">
+            <div class="form-floating">
+                <select class="form-select" id="selFilter" [(ngModel)]="selectedFilter" [disabled]="isLoading() || !!filterForm()?.dirty">
+                    <option [ngValue]="null">Select a filter</option>
+                    @for (filter of filters$ | async; track filter.Id)
+                    {
+                        <option [ngValue]="filter">{{filter.Name}}</option>
+                    }
+                </select>
+                <label for="selFilter">Filters</label>
+            </div>
+        </div>
+        <div class="col d-flex flex-column" [ngClass]="{'d-none': !selectedFilter()}">
+            <div class="flex-grow-1">
+                <ng-container #filterContainer></ng-container>
+            </div>
+            <hr />
+            <div class="d-flex gap-1 justify-content-end">
+                <button type="button" class="btn btn-info" (click)="handlePreview()" [disabled]="isLoading()">
+                    <fa-icon [icon]="faEye"></fa-icon>
+                </button>
+                <button type="button" class="btn btn-secondary" (click)="handleCopy()" [disabled]="isLoading()">
+                    <fa-icon [icon]="faCopy"></fa-icon>
+                </button>
+                <button type="button" class="btn btn-primary" (click)="handleUpdate()" 
+                    [disabled]="isLoading() || !filterForm()?.valid || !filterForm()?.dirty">
+                    <fa-icon [icon]="faSave"></fa-icon>
+                </button>
+                <button type="button" class="btn btn-danger" (click)="handleDelete()" [disabled]="isLoading()">
+                    <fa-icon [icon]="faTrash"></fa-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    <hr />
+</div>
