@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
     protected isLoading = signal<boolean>(false);
     protected filters$?: Observable<FilterModel[]>;
     protected filters: FilterModel[] = [];
-    protected readonly exportUrl: string = '/Filter/Generate';
+    protected readonly exportUrl: string = 'Filter/Generate';
     protected filterForm = signal<FormGroup<FilterModelForm> | null>(null);
 
     private destroyRef = inject(DestroyRef);
