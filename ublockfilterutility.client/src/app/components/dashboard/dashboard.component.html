@@ -9,8 +9,12 @@
             <div class="d-flex">
                 <h4 class="flex-fill m-0 p-0">uBlock Filter Utility</h4>
                 <div class="d-flex gap-1">
-                    <a class="btn btn-secondary btn-sm" [href]="exportUrl" download="filters.txt"><fa-icon [icon]="faFileExport"></fa-icon></a>
-                    <button type="button" class="btn btn-sm btn-primary" (click)="handleAdd()" [disabled]="isLoading()">
+                    <a class="btn btn-secondary btn-sm" [href]="exportUrl" download="filters.txt"
+                        tooltip="Export Filters">
+                        <fa-icon [icon]="faFileExport"></fa-icon>
+                    </a>
+                    <button type="button" class="btn btn-sm btn-primary" (click)="handleAdd()" [disabled]="isLoading()"
+                        tooltip="Add Filter">
                         <fa-icon [icon]="faPlus"></fa-icon>
                     </button>
                 </div>
@@ -19,7 +23,7 @@
     </div>
     <hr />
     <div class="row flex-fill">
-        <div class="col-4 border-end">
+        <div class="col-3 border-end">
             <div class="form-floating">
                 <select class="form-select" id="selFilter" [(ngModel)]="selectedFilter" [disabled]="isLoading() || !!filterForm()?.dirty">
                     <option [ngValue]="null">Select a filter</option>

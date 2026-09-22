@@ -17,6 +17,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { FilterEffects } from './shared/stores/filter/filter.effects';
 import { FILTER_REDUCER_KEY, filtersReducers } from './shared/stores/filter/filters.reducer';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { FILTER_REDUCER_KEY, filtersReducers } from './shared/stores/filter/filt
     ReactiveFormsModule,
     ModalDirective,
     StoreModule.forRoot({[FILTER_REDUCER_KEY]: filtersReducers}),
-    EffectsModule.forRoot(FilterEffects)
+    EffectsModule.forRoot(FilterEffects),
+    TooltipModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
