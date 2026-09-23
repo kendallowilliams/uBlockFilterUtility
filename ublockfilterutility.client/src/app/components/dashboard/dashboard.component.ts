@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, OnInit, signal, ViewChild, ViewContainerRef } from '@angular/core';
-import { faCopy, faEye, faFileExport, faPlus, faSave, faSpinner, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faEye, faFileExport, faPlus, faSave, faSpellCheck, faSpinner, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { FilterModel, FilterModelForm } from '../../shared/models/filter.model';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { FilterModalComponent } from '../modals/filter-modal/filter-modal.component';
@@ -33,6 +33,8 @@ export class DashboardComponent implements OnInit {
     protected faPlus = faPlus;
     protected faFileExport = faFileExport;
     protected faSpinner = faSpinner;
+    protected faSpellCheck = faSpellCheck;
+    protected faUndo = faUndo;
     protected isLoading = signal<boolean>(false);
     protected filters$?: Observable<FilterModel[]>;
     protected filters: FilterModel[] = [];
@@ -173,6 +175,15 @@ export class DashboardComponent implements OnInit {
                 this.store.dispatch(FiltersApiActions.deleteFilter({id: filterToDelete.Id!}));
                 this.selectedFilter.set(null);
             });
+    }
+
+    protected handleIsValidCheck(): void {
+        this.filterService.isFilterValid(this.selectedFilter()!.Id!)
+            .subscribe(valid => alert(valid));
+    }
+
+    protected handleUndo(): void {
+        this.filterForm()?.reset(this.selectedFilter()!);
     }
 
     private confirm(title: string, message: string, callbackFn: () => void): void {

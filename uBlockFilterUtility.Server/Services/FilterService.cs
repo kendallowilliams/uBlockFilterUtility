@@ -1,18 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Jering.Javascript.NodeJS;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using uBlockFilterUtility.DbContexts;
 using uBlockFilterUtility.Entities;
 using uBlockFilterUtility.Models;
+using uBlockFilterUtility.Server.Settings;
 
 namespace uBlockFilterUtility.Services
 {
     public class FilterService
     {
         private readonly IDbContextFactory<uBlockContext> _dbContextFactory;
+        private readonly AppSettings _settings;
+        private readonly INodeJSService _nodeService;
 
-        public FilterService(IDbContextFactory<uBlockContext> factory)
+        public FilterService(IDbContextFactory<uBlockContext> factory, IOptions<AppSettings> settings, INodeJSService nodeService)
         {
-            this._dbContextFactory = factory;
+            _dbContextFactory = factory;
+            _settings = settings.Value;
+            _nodeService = nodeService;
         }
 
         #region CRUD
@@ -105,6 +112,17 @@ namespace uBlockFilterUtility.Services
             }
 
             return string.Format(modifiedTemplate, paramValues);
+        }
+
+        public async Task<bool> IsFilterValid(int filterId)
+        {
+            var filter = await Get(filterId);
+
+            if (filter == null) throw new ArgumentNullException(nameof(filterId));
+
+            var filters = GenerateFilters(filter).Split(new[] { Environment.NewLine, "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            return await _nodeService.InvokeFromFileAsync<bool>(_settings.UboCoreNodeJsCommand, "isValid", args: [filters]);
         }
 
 

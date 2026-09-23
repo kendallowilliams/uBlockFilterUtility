@@ -3,5 +3,9 @@
     <Build />
     <Deploy />
   </Project>
+  <Project Path="uBlockFilterUtility.node/uBlockFilterUtility.node.esproj">
+    <Build />
+    <Deploy />
+  </Project>
   <Project Path="uBlockFilterUtility.Server/uBlockFilterUtility.Server.csproj" />
 </Solution>

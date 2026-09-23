@@ -32,4 +32,8 @@ export class FilterService {
     public getPreview(id: number): Observable<string> {
         return this.http.get(`${this.apiUrl}/Preview?id=${id}`, {responseType: 'text'})
     }
+
+    public isFilterValid(id: number): Observable<boolean> {
+        return this.http.get<boolean>(`${this.apiUrl}/IsFilterValid?id=${id}`)
+    }
 }

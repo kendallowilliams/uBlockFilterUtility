@@ -1,9 +1,11 @@
+using Jering.Javascript.NodeJS;
 using Microsoft.EntityFrameworkCore;
 using uBlockFilterUtility.DbContexts;
 using uBlockFilterUtility.Server.Settings;
 using uBlockFilterUtility.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+var appSettings = builder.Configuration.GetSection(nameof(AppSettings));
 
 // Add services to the container.
 
@@ -17,7 +19,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<FilterService>();
 builder.Services.AddDbContextFactory<uBlockContext>(options =>
 {
-    var config = builder.Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>();
+    var config = appSettings.Get<AppSettings>();
 
     if (string.IsNullOrWhiteSpace(config?.SqliteDataSourceRoot)) throw new NullReferenceException(nameof(AppSettings.SqliteDataSourceRoot));
 
@@ -30,6 +32,8 @@ builder.Services.AddDbContextFactory<uBlockContext>(options =>
 
     options.UseSqlite($"Data Source={dataSource}");
 });
+builder.Services.Configure<AppSettings>(appSettings);
+builder.Services.AddNodeJS();
 
 var app = builder.Build();
 

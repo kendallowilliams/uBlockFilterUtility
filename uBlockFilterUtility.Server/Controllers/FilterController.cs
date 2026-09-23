@@ -65,5 +65,12 @@ namespace uBlockFilterUtility.Server.Controllers
 
             return new FileContentResult(System.Text.Encoding.ASCII.GetBytes(contents), "text/plain");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> IsFilterValid(int id)
+        {
+            bool isValid = await _filterService.IsFilterValid(id);
+            return new JsonResult(isValid);
+        }
     }
 }
