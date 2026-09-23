@@ -8,6 +8,7 @@
     <SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:61077</SpaProxyServerUrl>
     <UserSecretsId>0a706cbd-ba01-40e0-8b6c-b858b987c33e</UserSecretsId>
+	<AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
   <ItemGroup>
