@@ -7,6 +7,7 @@
     "preinstall": "tsc --build tsconfig.types.json --clean",
     "postinstall": "tsc --project tsconfig.types.json",
     "build": "tsc --build",
+    "publish": "npx esbuild ./app.js --bundle --outfile=./dist/app.js --platform=node",
     "clean": "tsc --build --clean"
   },
   "keywords": [],
@@ -15,6 +16,7 @@
   "type": "commonjs",
   "devDependencies": {
     "@types/node": "^26.6.2",
+    "esbuild": "0.28.2",
     "eslint": "^10.11.0",
     "typescript": "^7.0.2"
   },

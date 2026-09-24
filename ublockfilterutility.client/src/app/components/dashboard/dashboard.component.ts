@@ -178,7 +178,9 @@ export class DashboardComponent implements OnInit {
     }
 
     protected handleIsValidCheck(): void {
+        this.isLoading.set(true);
         this.filterService.isFilterValid(this.selectedFilter()!.Id!)
+            .pipe(finalize(() => this.isLoading.set(false)))
             .subscribe(valid => alert(valid));
     }
 
@@ -187,7 +189,6 @@ export class DashboardComponent implements OnInit {
     }
 
     private confirm(title: string, message: string, callbackFn: () => void): void {
-        const selectedFilter = this.selectedFilter()!;
         const context: ModalOptions<ConfirmModalComponent> = {
             class: 'modal-lg modal-dialog-centered',
             initialState: {
