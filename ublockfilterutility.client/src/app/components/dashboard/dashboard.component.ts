@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, OnInit, signal, ViewChild, ViewContainerRef } from '@angular/core';
-import { faCopy, faEye, faFileExport, faPlus, faSave, faSpellCheck, faSpinner, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faEye, faFileExport, faPlus, faSave, faSpinner, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { FilterModel, FilterModelForm } from '../../shared/models/filter.model';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { FilterModalComponent } from '../modals/filter-modal/filter-modal.component';
@@ -33,7 +33,6 @@ export class DashboardComponent implements OnInit {
     protected faPlus = faPlus;
     protected faFileExport = faFileExport;
     protected faSpinner = faSpinner;
-    protected faSpellCheck = faSpellCheck;
     protected faUndo = faUndo;
     protected isLoading = signal<boolean>(false);
     protected filters$?: Observable<FilterModel[]>;
@@ -177,15 +176,11 @@ export class DashboardComponent implements OnInit {
             });
     }
 
-    protected handleIsValidCheck(): void {
-        this.isLoading.set(true);
-        this.filterService.isFilterValid(this.selectedFilter()!.Id!)
-            .pipe(finalize(() => this.isLoading.set(false)))
-            .subscribe(valid => alert(valid));
-    }
-
     protected handleUndo(): void {
-        this.filterForm()?.reset(this.selectedFilter()!);
+        const selectedFilter = this.selectedFilter();
+
+        this.selectedFilter.set(null);
+        this.selectedFilter.set(selectedFilter);
     }
 
     private confirm(title: string, message: string, callbackFn: () => void): void {
@@ -233,7 +228,16 @@ export class DashboardComponent implements OnInit {
             this.filterForm.set(filterForm);
             componentRef.setInput('form', filterForm);
             componentRef.setInput('isEdit', true);
+
+            this.getIsValid(filter.Id!, (isValid) => componentRef.setInput('isValid', isValid));
         }
+    }
+
+    private getIsValid(id: number, callbackFn: (isValid: boolean) => void): void {
+        this.isLoading.set(true);
+        this.filterService.isFilterValid(id)
+            .pipe(finalize(() => this.isLoading.set(false)))
+            .subscribe(valid => callbackFn?.(valid));
     }
 
     private generateLocalId: () => string = (): string => `_${uuid.v4()}`;

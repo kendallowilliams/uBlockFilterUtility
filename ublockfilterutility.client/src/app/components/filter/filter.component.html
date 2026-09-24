@@ -4,7 +4,12 @@
             <input type="hidden" formControlName="Id" />
             @if (isEdit)
             {
-                <h4 class="fst-italic">{{form?.controls?.['Name'].value}}</h4>
+                <h4 class="fst-italic">
+                    <span>{{form?.controls?.['Name'].value}}</span>&nbsp;
+                    @if (!isValid) {
+                        <fa-icon [icon]="faCircleExclamation" class="text-danger"></fa-icon>
+                    }
+                </h4>
                 <input type="hidden" formControlName="Name" />
                 <hr />
             } @else {
@@ -67,11 +72,12 @@
                     <label for="param-value">Value</label>
                 </div>
                 @if (paramForm?.dirty) {
-                    <button type="button" class="btn btn-secondary" (click)="handleParamClear()">
+                    <button type="button" class="btn btn-secondary" (click)="handleParamClear()" tooltip="Clear Parameter">
                         <fa-icon [icon]="faEraser"></fa-icon>
                     </button>
                 }
-                <button type="button" class="btn btn-primary" (click)="handleParamAdd()" [disabled]="!paramForm?.valid">
+                <button type="button" class="btn btn-primary" (click)="handleParamAdd()" [disabled]="!paramForm?.valid"
+                    tooltip="Add Parameter">
                     <fa-icon [icon]="faPlus"></fa-icon>
                 </button>
             </div>

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.6165494">
-  <ItemGroup>
-    <None Remove="src\types\**" />
-    <TypeScriptConfiguration Remove="src\types\**" />
-  </ItemGroup>
+  <PropertyGroup>
+    <BuildCommand>npm run build</BuildCommand>
+    <CleanCommand>npm run clean</CleanCommand>
+  </PropertyGroup>
 </Project>

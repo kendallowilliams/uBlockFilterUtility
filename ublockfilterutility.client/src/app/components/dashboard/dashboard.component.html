@@ -44,28 +44,28 @@
                 @let isEditing = filterForm()?.touched && filterForm()?.dirty;
                 @let canSave = filterForm()?.valid && filterForm()?.dirty;
                 @if (!isEditing) {
-                    <button type="button" class="btn btn-success" (click)="handleIsValidCheck()" [disabled]="isLoading() || isEditing">
-                        <fa-icon [icon]="faSpellCheck"></fa-icon>
-                    </button>
-                    <button type="button" class="btn btn-info" (click)="handlePreview()" [disabled]="isLoading() || isEditing">
+                    <button type="button" class="btn btn-info" (click)="handlePreview()" [disabled]="isLoading() || isEditing"
+                        tooltip="View Filter">
                         <fa-icon [icon]="faEye"></fa-icon>
                     </button>
-                    <button type="button" class="btn btn-secondary" (click)="handleCopy()" [disabled]="isLoading() || isEditing">
+                    <button type="button" class="btn btn-secondary" (click)="handleCopy()" [disabled]="isLoading() || isEditing"
+                        tooltip="Copy Filter">
                         <fa-icon [icon]="faCopy"></fa-icon>
                     </button>
                 }
                 @if (isEditing) {
-                    <button type="button" class="btn btn-primary" (click)="handleUpdate()" 
+                    <button type="button" class="btn btn-primary" (click)="handleUpdate()" tooltip="Save Filter"
                         [disabled]="isLoading() || !canSave">
                         <fa-icon [icon]="faSave"></fa-icon>
                     </button>
-                    <button type="button" class="btn btn-danger" (click)="handleUndo()" 
+                    <button type="button" class="btn btn-danger" (click)="handleUndo()" tooltip="Undo Changes"
                         [disabled]="isLoading()">
                         <fa-icon [icon]="faUndo"></fa-icon>
                     </button>
                 }
                 @if (!isEditing) {
-                    <button type="button" class="btn btn-danger" (click)="handleDelete()" [disabled]="isLoading()">
+                    <button type="button" class="btn btn-danger" (click)="handleDelete()" [disabled]="isLoading()"
+                        tooltip="Delete Filter">
                         <fa-icon [icon]="faTrash"></fa-icon>
                     </button>
                 }

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { FilterModel, FilterModelForm } from "../../shared/models/filter.model";
-import { faEraser, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faCircleExclamation, faEraser, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { FilterParameter, FilterParameterForm } from "../../shared/models/param.model";
 import { uniqueKey } from "../../shared/validators/parameter.validators";
@@ -12,10 +12,12 @@ import { uniqueKey } from "../../shared/validators/parameter.validators";
 })
 export class FilterComponent implements OnInit {
     @Input({required: true}) public form: FormGroup<FilterModelForm> | null = null;
+    @Input() public isValid = true;
     @Input() public isEdit = false;
     protected faPlus = faPlus;
     protected faTrash = faTrash;
     protected faEraser = faEraser;
+    protected faCircleExclamation = faCircleExclamation;
     protected parameters: FilterParameter[] = [];
     protected missingParams?: string;
     protected paramForm: FormGroup<FilterParameterForm> | null = null;

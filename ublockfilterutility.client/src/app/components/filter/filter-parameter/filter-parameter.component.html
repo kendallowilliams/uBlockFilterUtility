@@ -1,12 +1,12 @@
 <div class="input-group w-auto">
     <div class="input-group-text fw-bold">{{param?.key}}</div>
-    <button type="button" class="btn btn-sm btn-info" (click)="handlePreview()">
+    <button type="button" class="btn btn-sm btn-info" (click)="handlePreview()" tooltip="View Parameter">
         <fa-icon [icon]="faEye"></fa-icon>
     </button>
-    <button type="button" class="btn btn-sm btn-secondary" (click)="handleEdit()">
+    <button type="button" class="btn btn-sm btn-secondary" (click)="handleEdit()" tooltip="Edit Parameter">
         <fa-icon [icon]="faPencil"></fa-icon>
     </button>
-    <button type="button" class="btn btn-sm btn-danger" (click)="handleRemove()">
+    <button type="button" class="btn btn-sm btn-danger" (click)="handleRemove()" tooltip="Remove Parameter">
         <fa-icon [icon]="faTrash"></fa-icon>
     </button>
 </div>
