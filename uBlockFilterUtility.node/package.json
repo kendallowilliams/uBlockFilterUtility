@@ -7,7 +7,7 @@
     "preinstall": "tsc --build tsconfig.types.json --clean",
     "postinstall": "tsc --project tsconfig.types.json",
     "build": "tsc --build",
-    "publish": "npx esbuild ./app.js --bundle --outfile=./dist/app.js --platform=node",
+    "publish": "\".\\node_modules\\.bin\\esbuild\" ./app.js --bundle --outfile=./dist/app.js --platform=node",
     "clean": "tsc --build --clean"
   },
   "keywords": [],
