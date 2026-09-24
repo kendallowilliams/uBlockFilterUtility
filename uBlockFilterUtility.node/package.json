@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "preinstall": "tsc --build tsconfig.types.json --clean",
     "postinstall": "tsc --project tsconfig.types.json",
     "build": "tsc --build",
     "clean": "tsc --build --clean"
