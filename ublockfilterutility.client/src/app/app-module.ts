@@ -1,4 +1,4 @@
-import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { NgModule, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing-module';
 import { AppComponent } from './app.component';
@@ -17,8 +17,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { FilterEffects } from './shared/stores/filter/filter.effects';
 import { FILTER_REDUCER_KEY, filtersReducers } from './shared/stores/filter/filters.reducer';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { ModalComponent } from './components/modals/modal/modal.component';
-import { ModalService } from './shared/services/modal.service';
+import { MessageBoxModalComponent } from './components/modals/message-box-modal/message-box-modal.component';
+import { MessageBoxService } from './shared/services/message-box.service';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,7 @@ import { ModalService } from './shared/services/modal.service';
     FilterComponent,
     FilterModalComponent,
     FilterParameterComponent,
-    ModalComponent
+    MessageBoxModalComponent
   ],
   imports: [
     BrowserModule,
@@ -50,7 +50,8 @@ import { ModalService } from './shared/services/modal.service';
         return segments.length > 0 ? `/${segments[0]}/` : '/';
       },
     },
-    ModalService
+    MessageBoxService,
+    provideZonelessChangeDetection()
   ],
   bootstrap: [AppComponent],
 })

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, DestroyRef, effect, inject, OnInit, signal, ViewChild, ViewContainerRef } from '@angular/core';
 import { faCopy, faEye, faFileExport, faPlus, faSave, faSpinner, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { FilterModel, FilterModelForm } from '../../shared/models/filter.model';
 import { FilterModalComponent } from '../modals/filter-modal/filter-modal.component';
@@ -8,17 +8,16 @@ import { FiltersApiActions } from '../../shared/stores/filter/filters.actions';
 import { selectFilters, selectFiltersLoading, selectIdMappings } from '../../shared/stores/filter/filters.selectors';
 import { FilterService } from '../../shared/services/filter.service';
 import { FilterState } from '../../shared/stores/filter/filter.state';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { missingParameters } from '../../shared/validators/template.validators';
 import { FilterComponent } from '../filter/filter.component';
 import { FilterParameter } from '../../shared/models/param.model';
-import * as uuid from 'uuid';
-import { ModalService } from '../../shared/services/modal.service';
+import { MessageBoxService } from '../../shared/services/message-box.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ModalConfig } from '../../shared/models/modal-config.model';
-import { ModalComponent } from '../modals/modal/modal.component';
-import { AppCallback } from '../../shared/types/callback.type';
+import { MessageBoxModalComponent } from '../modals/message-box-modal/message-box-modal.component';
+import { HtmlUtils } from '../../shared/utils/html.utilts';
 
 @Component({
     selector: 'app-dashboard',
@@ -26,7 +25,7 @@ import { AppCallback } from '../../shared/types/callback.type';
     standalone: false
 })
 export class DashboardComponent implements OnInit {
-    @ViewChild('filterContainer', {read: ViewContainerRef}) private filterContainer!: ViewContainerRef;
+    @ViewChild('filterContainer', {read: ViewContainerRef, static: true}) private filterContainer!: ViewContainerRef;
 
     protected selectedFilter = signal<FilterModel | null>(null);
     protected faSave = faSave;
@@ -51,17 +50,15 @@ export class DashboardComponent implements OnInit {
         private store: Store<FilterState>, 
         private filterService: FilterService,
         private fb: FormBuilder,
-        private modalService: ModalService
+        private messageBoxService: MessageBoxService
     ) {
         const destroySub = new Subject<void>();
 
-        toObservable(this.selectedFilter)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(filter => {
-                destroySub.next();
-                this.loadSelectedFilter(filter, destroySub);
-            });
         this.exportUrl = this.filterService.getExportUrl();
+        effect(() => {
+            destroySub.next();
+            this.loadSelectedFilter(this.selectedFilter(), destroySub);
+        });
     }
     
     public ngOnInit(): void {
@@ -91,7 +88,7 @@ export class DashboardComponent implements OnInit {
             };
             const modalRef = this.bsModal.show(FilterModalComponent, context);
 
-            this.selectedFilterLocalId = this.generateLocalId();
+            this.selectedFilterLocalId = HtmlUtils.generateId();
             modalRef.content?.addFilter
                 .subscribe(() => {
                     const request = {
@@ -104,17 +101,26 @@ export class DashboardComponent implements OnInit {
         };
 
         if (this.filterForm()?.dirty) {
-            this.confirm(
-                'Unsaved Changes',
-                'Are you sure you want to leave? Unsaved changes will be lost.',
-                addFn);
+            const modalConfig: ModalConfig<MessageBoxModalComponent> = {
+                options: {
+                    class: 'modal-lg modal-dialog-centered',
+                    initialState: {
+                        context: { 
+                            title: 'Unsaved Changes', 
+                            message: 'Are you sure you want to leave? Unsaved changes will be lost.'
+                        }
+                    }
+                }
+            };
+
+            this.messageBoxService.warn(modalConfig).subscribe(proceed => proceed && addFn());
         } else {
             addFn();
         }
     }
 
     protected handleUpdate(): void {
-        const localId = this.generateLocalId();
+        const localId = HtmlUtils.generateId();
         const request = {
             id: localId,
             filter: this.filterForm()?.getRawValue()! as FilterModel
@@ -136,7 +142,7 @@ export class DashboardComponent implements OnInit {
             };
             const modalRef = this.bsModal.show(FilterModalComponent, context);
 
-            this.selectedFilterLocalId = this.generateLocalId();
+            this.selectedFilterLocalId = HtmlUtils.generateId();
             modalRef.content?.copyFilter
                 .subscribe(() => {
                     const request = {
@@ -149,23 +155,41 @@ export class DashboardComponent implements OnInit {
         };
 
         if (this.filterForm()?.dirty) {
-            this.confirm(
-                'Unsaved Changes',
-                'Are you sure you want to leave? Unsaved changes will be lost.',
-                copyFn);
+            const modalConfig: ModalConfig<MessageBoxModalComponent> = {
+                options: {
+                    class: 'modal-lg modal-dialog-centered',
+                    initialState: {
+                        context: { 
+                            title: 'Unsaved Changes', 
+                            message: 'Are you sure you want to leave? Unsaved changes will be lost.'
+                        }
+                    }
+                }
+            };
+
+            this.messageBoxService.warn(modalConfig).subscribe(proceed => proceed && copyFn());
         } else {
             copyFn();
         }
     }
 
     protected handlePreview(): void {
-        const id = this.selectedFilter()?.Id!;
+        const filter = this.selectedFilter()!;
 
         this.isLoading.set(true);
-        this.filterService.getPreview(id)
+        this.filterService.getPreview(filter.Id!)
             .pipe(finalize(() => this.isLoading.set(false)))
             .subscribe(preview => {
-                alert(preview);
+                this.messageBoxService.alert({
+                    options: {
+                        initialState: {
+                            context: {
+                                title: `"${filter.Name!}" Preview`,
+                                message: preview
+                            }
+                        }
+                    }
+                });
             });
     }
 
@@ -173,7 +197,7 @@ export class DashboardComponent implements OnInit {
         const filterToDelete = this.selectedFilter()!;
         const title = `Delete "${filterToDelete.Name}"`;
         const message = `Are you sure you want to delete "${filterToDelete.Name}"?`;
-        const modalConfig: ModalConfig<ModalComponent> = {
+        const modalConfig: ModalConfig<MessageBoxModalComponent> = {
             options: {
                 class: 'modal-lg modal-dialog-centered',
                 initialState: {
@@ -182,7 +206,7 @@ export class DashboardComponent implements OnInit {
             }
         };
 
-        this.modalService.showConfirm(modalConfig)
+        this.messageBoxService.warn(modalConfig)
             .subscribe((proceed: boolean): void => {
                 if (proceed) {
                     this.store.dispatch(FiltersApiActions.deleteFilter({id: filterToDelete.Id!}));
@@ -196,19 +220,6 @@ export class DashboardComponent implements OnInit {
 
         this.selectedFilter.set(null);
         this.selectedFilter.set(selectedFilter);
-    }
-
-    private confirm(title: string, message: string, callbackFn: AppCallback): void {
-        const modalConfig: ModalConfig<ModalComponent> = {
-            options: {
-                class: 'modal-lg modal-dialog-centered',
-                initialState: {
-                    context: { title, message }
-                }
-            }
-        };
-
-        this.modalService.showConfirm(modalConfig).subscribe(() => callbackFn());
     }
 
     private getFilterForm(initialValue: FilterModel | null = null, destroySub: Subject<void>): FormGroup<FilterModelForm> {
@@ -254,6 +265,4 @@ export class DashboardComponent implements OnInit {
             .pipe(finalize(() => this.isLoading.set(false)))
             .subscribe(valid => callbackFn?.(valid));
     }
-
-    private generateLocalId: () => string = (): string => `_${uuid.v4()}`;
 }

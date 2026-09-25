@@ -4,6 +4,9 @@ import { faCircleExclamation, faEraser, faPlus, faTrash } from "@fortawesome/fre
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { FilterParameter, FilterParameterForm } from "../../shared/models/param.model";
 import { uniqueKey } from "../../shared/validators/parameter.validators";
+import { MessageBoxService } from "../../shared/services/message-box.service";
+import { ModalConfig } from "../../shared/models/modal-config.model";
+import { MessageBoxModalComponent } from "../modals/message-box-modal/message-box-modal.component";
 
 @Component({
     selector: 'app-filter',
@@ -22,7 +25,7 @@ export class FilterComponent implements OnInit {
     protected missingParams?: string;
     protected paramForm: FormGroup<FilterParameterForm> | null = null;
 
-    constructor(private fb: FormBuilder) {}
+    constructor(private fb: FormBuilder, private messageBoxService: MessageBoxService) {}
 
     public ngOnInit(): void {
         const filter = this.form?.getRawValue() as FilterModel;
@@ -55,17 +58,36 @@ export class FilterComponent implements OnInit {
     }
 
     protected handleParamEdit(param: FilterParameter): void {
-        this.handleParamRemove(param.key);
-        this.paramForm?.reset({Key: param.key, Value: param.value});
-        this.paramForm?.markAsTouched();
-        this.paramForm?.markAsDirty();
-        this.paramForm?.controls['Key'].disable();
+        const modalConfig: ModalConfig<MessageBoxModalComponent> = {
+            options: {
+                class: 'modal-lg modal-dialog-centered',
+                initialState: {
+                    context: { 
+                        title: `Update "${param.key}"`, 
+                        message: 'Value',
+                        initialResponse: param.value
+                    }
+                }
+            }
+        };
+
+        this.messageBoxService.prompt(modalConfig)
+            .subscribe(response => {
+                if (response) {
+                    const control = this.form?.controls['Parameters']!;
+
+                    param.value = response;
+                    control.setValue(Object.assign({[param.key]: response}, control.value));
+                    control.markAsTouched();
+                    control.markAsDirty();
+                }
+            });
     }
 
 
     protected handleParamRemove(key: string): void {
         const control = this.form?.controls['Parameters']!;
-        let params = <FilterModel['Parameters']>control.getRawValue() || {};
+        let params = control.getRawValue() || {} as FilterModel['Parameters'];
         
         params = Object.assign({}, params);
         this.parameters = this.parameters.filter(p => p.key !== key);
