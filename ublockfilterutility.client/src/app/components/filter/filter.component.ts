@@ -57,6 +57,8 @@ export class FilterComponent implements OnInit {
     protected handleParamEdit(param: FilterParameter): void {
         this.handleParamRemove(param.key);
         this.paramForm?.reset({Key: param.key, Value: param.value});
+        this.paramForm?.markAsTouched();
+        this.paramForm?.markAsDirty();
         this.paramForm?.controls['Key'].disable();
     }
 
