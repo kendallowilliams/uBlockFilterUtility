@@ -34,6 +34,8 @@ export class FilterService {
     }
 
     public isFilterValid(id: number): Observable<boolean> {
-        return this.http.get<boolean>(`${this.apiUrl}/IsFilterValid/${id}`);
+      return this.http.get<boolean>(`${this.apiUrl}/IsFilterValid/${id}`);
     }
+
+    public getExportUrl: () => string = (): string => `${this.apiUrl}/Generate`;
 }
