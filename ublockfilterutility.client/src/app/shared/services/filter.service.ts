@@ -9,7 +9,7 @@ import { APP_BASE_HREF } from "@angular/common";
 })
 export class FilterService {
     private readonly baseHref = inject(APP_BASE_HREF);
-    private readonly apiUrl = `${this.baseHref}Filter`;
+    private readonly apiUrl = `${this.baseHref}api/Filter`;
 
     constructor(private http: HttpClient) {}
 
@@ -26,14 +26,14 @@ export class FilterService {
     }
 
     public deleteFilter(id: number): Observable<boolean> {
-        return this.http.delete<boolean>(`${this.apiUrl}/Filter?id=${id}`);
+        return this.http.delete<boolean>(`${this.apiUrl}/Filter/${id}`);
     }
 
     public getPreview(id: number): Observable<string> {
-        return this.http.get(`${this.apiUrl}/Preview?id=${id}`, {responseType: 'text'})
+        return this.http.get(`${this.apiUrl}/Preview/${id}`, {responseType: 'text'});
     }
 
     public isFilterValid(id: number): Observable<boolean> {
-        return this.http.get<boolean>(`${this.apiUrl}/IsFilterValid?id=${id}`)
+        return this.http.get<boolean>(`${this.apiUrl}/IsFilterValid/${id}`);
     }
 }

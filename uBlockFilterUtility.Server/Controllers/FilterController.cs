@@ -5,7 +5,7 @@ using uBlockFilterUtility.Services;
 namespace uBlockFilterUtility.Server.Controllers
 {
     [ApiController]
-    [Route("[controller]/[action]")]
+    [Route("api/[controller]/[action]/{id?}")]
     public class FilterController : ControllerBase
     {
         private readonly FilterService _filterService;
@@ -40,13 +40,13 @@ namespace uBlockFilterUtility.Server.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Filter([FromQuery]int id)
+        public async Task<IActionResult> Filter(int id)
         {
             return new JsonResult(await _filterService.Delete(id));
         }
 
         [HttpGet]
-        public async Task<IActionResult> Preview([FromQuery] int id)
+        public async Task<IActionResult> Preview(int id)
         {
             var filter = await _filterService.Get(id);
             return new JsonResult(filter != null
