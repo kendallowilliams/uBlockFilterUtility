@@ -1,0 +1,1 @@
+export type AppCallback<TArgs = void, TOutput = void> = (...args: TArgs[]) => TOutput;

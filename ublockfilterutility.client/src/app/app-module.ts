@@ -9,7 +9,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { FilterModalComponent } from './components/modals/filter-modal/filter-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterService } from './shared/services/filter.service';
-import { ConfirmModalComponent } from './components/modals/confirm-modal/confirm-modal.component';
 import { FilterParameterComponent } from './components/filter/filter-parameter/filter-parameter.component';
 import { APP_BASE_HREF } from '@angular/common';
 import { ModalDirective } from './components/modals/directives/modal.directive';
@@ -18,6 +17,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { FilterEffects } from './shared/stores/filter/filter.effects';
 import { FILTER_REDUCER_KEY, filtersReducers } from './shared/stores/filter/filters.reducer';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { ModalComponent } from './components/modals/modal/modal.component';
+import { ModalService } from './shared/services/modal.service';
 
 @NgModule({
   declarations: [
@@ -25,8 +26,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     DashboardComponent,
     FilterComponent,
     FilterModalComponent,
-    ConfirmModalComponent,
     FilterParameterComponent,
+    ModalComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +49,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
         const segments = window.location.pathname.split('/').filter(Boolean);
         return segments.length > 0 ? `/${segments[0]}/` : '/';
       },
-    }
+    },
+    ModalService
   ],
   bootstrap: [AppComponent],
 })

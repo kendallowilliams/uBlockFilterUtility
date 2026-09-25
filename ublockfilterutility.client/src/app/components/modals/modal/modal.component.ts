@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { ConfirmModalConfig } from './confirm-modal.config';
+import { ModalContext } from '../../../shared/models/modal-config.model';
 
 @Component({
-    selector: 'app-confirm-modal',
-    templateUrl: 'confirm-modal.component.html',
+    selector: 'app-modal',
+    templateUrl: 'modal.component.html',
     standalone: false
 })
-export class ConfirmModalComponent implements OnDestroy {
-    @Input() public options: ConfirmModalConfig | null = null;
+export class ModalComponent implements OnDestroy {
+    @Input() public context: ModalContext | null = null;
 
     @Output() public confirm = new EventEmitter();
 

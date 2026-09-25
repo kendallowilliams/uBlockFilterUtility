@@ -1,9 +1,7 @@
 import { Component, DestroyRef, inject, OnInit, signal, ViewChild, ViewContainerRef } from '@angular/core';
 import { faCopy, faEye, faFileExport, faPlus, faSave, faSpinner, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { FilterModel, FilterModelForm } from '../../shared/models/filter.model';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { FilterModalComponent } from '../modals/filter-modal/filter-modal.component';
-import { ConfirmModalComponent } from '../modals/confirm-modal/confirm-modal.component';
 import { finalize, Observable, Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { FiltersApiActions } from '../../shared/stores/filter/filters.actions';
@@ -16,6 +14,11 @@ import { missingParameters } from '../../shared/validators/template.validators';
 import { FilterComponent } from '../filter/filter.component';
 import { FilterParameter } from '../../shared/models/param.model';
 import * as uuid from 'uuid';
+import { ModalService } from '../../shared/services/modal.service';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { ModalConfig } from '../../shared/models/modal-config.model';
+import { ModalComponent } from '../modals/modal/modal.component';
+import { AppCallback } from '../../shared/types/callback.type';
 
 @Component({
     selector: 'app-dashboard',
@@ -44,10 +47,11 @@ export class DashboardComponent implements OnInit {
     private selectedFilterLocalId: string | null = null;
 
     constructor(
-        private bsModal: BsModalService, 
+        private bsModal: BsModalService,
         private store: Store<FilterState>, 
         private filterService: FilterService,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private modalService: ModalService
     ) {
         const destroySub = new Subject<void>();
 
@@ -166,13 +170,23 @@ export class DashboardComponent implements OnInit {
 
     protected handleDelete(): void {
         const filterToDelete = this.selectedFilter()!;
+        const title = `Delete "${filterToDelete.Name}"`;
+        const message = `Are you sure you want to delete "${filterToDelete.Name}"?`;
+        const modalConfig: ModalConfig<ModalComponent> = {
+            options: {
+                class: 'modal-lg modal-dialog-centered',
+                initialState: {
+                    context: { title, message }
+                }
+            }
+        };
 
-        this.confirm(
-            `Delete "${filterToDelete.Name}"`, 
-            `Are you sure you want to delete "${filterToDelete.Name}"?`,
-            () => {
-                this.store.dispatch(FiltersApiActions.deleteFilter({id: filterToDelete.Id!}));
-                this.selectedFilter.set(null);
+        this.modalService.showConfirm(modalConfig)
+            .subscribe((proceed: boolean): void => {
+                if (proceed) {
+                    this.store.dispatch(FiltersApiActions.deleteFilter({id: filterToDelete.Id!}));
+                    this.selectedFilter.set(null);
+                }
             });
     }
 
@@ -183,17 +197,17 @@ export class DashboardComponent implements OnInit {
         this.selectedFilter.set(selectedFilter);
     }
 
-    private confirm(title: string, message: string, callbackFn: () => void): void {
-        const context: ModalOptions<ConfirmModalComponent> = {
-            class: 'modal-lg modal-dialog-centered',
-            initialState: {
-                options: { title, message }
+    private confirm(title: string, message: string, callbackFn: AppCallback): void {
+        const modalConfig: ModalConfig<ModalComponent> = {
+            options: {
+                class: 'modal-lg modal-dialog-centered',
+                initialState: {
+                    context: { title, message }
+                }
             }
         };
-        const modalRef = this.bsModal.show(ConfirmModalComponent, context);
 
-        modalRef.content?.confirm
-            .subscribe(() => callbackFn());
+        this.modalService.showConfirm(modalConfig).subscribe(() => callbackFn());
     }
 
     private getFilterForm(initialValue: FilterModel | null = null, destroySub: Subject<void>): FormGroup<FilterModelForm> {
