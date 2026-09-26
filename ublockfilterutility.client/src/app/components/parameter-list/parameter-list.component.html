@@ -46,7 +46,7 @@
                 <hr />
                 <div class="d-flex flex-wrap gap-1 flex-fill overflow-auto align-content-start">
                     @for (param of parameters(); track param?.key) {
-                        <app-filter-parameter [param]="param" (paramRemove)="handleParamRemove(param.key)"
+                        <app-filter-parameter [param]="param" [disabled]="isEditing()" (paramRemove)="handleParamRemove(param.key)"
                             (paramEdit)="handleParamEdit(param)"></app-filter-parameter>
                     }
                 </div>
