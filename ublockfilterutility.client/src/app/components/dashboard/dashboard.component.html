@@ -41,14 +41,14 @@
             </div>
             <hr />
             <div class="d-flex gap-1 justify-content-end">
-                @let isEditing = filterForm()?.touched && filterForm()?.dirty;
+                @let isEditing = (filterForm()?.touched && filterForm()?.dirty) || paramsChanged();
                 @let canSave = filterForm()?.valid && filterForm()?.dirty;
                 @if (!isEditing) {
-                    <button type="button" class="btn btn-info" (click)="handlePreview()" [disabled]="isLoading() || isEditing"
+                    <button type="button" class="btn btn-info" (click)="handlePreview()" [disabled]="isLoading()"
                         tooltip="View Filter">
                         <fa-icon [icon]="faEye"></fa-icon>
                     </button>
-                    <button type="button" class="btn btn-secondary" (click)="handleCopy()" [disabled]="isLoading() || isEditing"
+                    <button type="button" class="btn btn-secondary" (click)="handleCopy()" [disabled]="isLoading()"
                         tooltip="Copy Filter">
                         <fa-icon [icon]="faCopy"></fa-icon>
                     </button>

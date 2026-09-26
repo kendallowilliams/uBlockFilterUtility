@@ -17,6 +17,7 @@ export class FilterComponent implements OnInit {
     @Input({required: true}) public form: FormGroup<FilterModelForm> | null = null;
     @Input() public isValid = true;
     @Input() public isEdit = false;
+
     protected faPlus = faPlus;
     protected faTrash = faTrash;
     protected faEraser = faEraser;
@@ -77,9 +78,9 @@ export class FilterComponent implements OnInit {
                     const control = this.form?.controls['Parameters']!;
 
                     param.value = response;
-                    control.setValue(Object.assign({[param.key]: response}, control.value));
                     control.markAsTouched();
                     control.markAsDirty();
+                    control.patchValue(Object.assign({[param.key]: response}, control.value));
                 }
             });
     }

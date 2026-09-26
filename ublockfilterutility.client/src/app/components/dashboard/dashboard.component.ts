@@ -41,6 +41,7 @@ export class DashboardComponent implements OnInit {
     protected filters: FilterModel[] = [];
     protected readonly exportUrl?: string;
     protected filterForm = signal<FormGroup<FilterModelForm> | null>(null);
+    protected paramsChanged = signal<boolean>(false);
 
     private destroyRef = inject(DestroyRef);
     private selectedFilterLocalId: string | null = null;
@@ -237,6 +238,7 @@ export class DashboardComponent implements OnInit {
                 const template = form.controls['Template'];
                 parameters = Object.keys(params || {}).map(key => ({key, value: params![key]}));
                 template.updateValueAndValidity();
+                this.paramsChanged.set(form.dirty && form.touched);
             });
         if (initialValue) form.reset(initialValue);
 
