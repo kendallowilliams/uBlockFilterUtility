@@ -1,4 +1,8 @@
-import { NgModule, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import {
+  NgModule,
+  provideBrowserGlobalErrorListeners,
+  provideZonelessChangeDetection,
+} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing-module';
 import { AppComponent } from './app.component';
@@ -20,6 +24,9 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { MessageBoxModalComponent } from './components/modals/message-box-modal/message-box-modal.component';
 import { MessageBoxService } from './shared/services/message-box.service';
 import { ThemeService } from './shared/services/theme.service';
+import { ParameterListComponent } from './components/parameter-list/parameter-list.component';
+import { FormField, FormRoot } from '@angular/forms/signals';
+import { InjectionContextService } from './shared/services/injection-context.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +35,8 @@ import { ThemeService } from './shared/services/theme.service';
     FilterComponent,
     FilterModalComponent,
     FilterParameterComponent,
-    MessageBoxModalComponent
+    MessageBoxModalComponent,
+    ParameterListComponent,
   ],
   imports: [
     BrowserModule,
@@ -38,13 +46,16 @@ import { ThemeService } from './shared/services/theme.service';
     FormsModule,
     ReactiveFormsModule,
     ModalDirective,
-    StoreModule.forRoot({[FILTER_REDUCER_KEY]: filtersReducers}),
+    StoreModule.forRoot({ [FILTER_REDUCER_KEY]: filtersReducers }),
     EffectsModule.forRoot(FilterEffects),
-    TooltipModule
-  ],
+    TooltipModule,
+    FormField,
+    FormRoot
+],
   providers: [
     provideBrowserGlobalErrorListeners(),
-    FilterService, {
+    FilterService,
+    {
       provide: APP_BASE_HREF,
       useFactory: () => {
         const segments = window.location.pathname.split('/').filter(Boolean);
@@ -53,7 +64,8 @@ import { ThemeService } from './shared/services/theme.service';
     },
     MessageBoxService,
     provideZonelessChangeDetection(),
-    ThemeService
+    ThemeService,
+    InjectionContextService
   ],
   bootstrap: [AppComponent],
 })

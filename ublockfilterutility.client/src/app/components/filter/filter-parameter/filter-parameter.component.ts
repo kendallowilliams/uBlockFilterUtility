@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { faEye, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { FilterParameter } from '../../../shared/models/param.model';
+import { FilterParameter } from '../../../shared/models/filter-parameter.model';
 import { MessageBoxService } from '../../../shared/services/message-box.service';
 
 @Component({

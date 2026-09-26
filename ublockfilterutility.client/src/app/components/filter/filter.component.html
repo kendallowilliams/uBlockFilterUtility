@@ -1,94 +1,54 @@
-<form class="needs-validation h-100 d-flex flex-column" novalidate [formGroup]="form!">
+<form class="needs-validation h-100 d-flex flex-column" novalidate [formRoot]="form()">
     <div class="row">
         <div class="col">
-            <input type="hidden" formControlName="Id" />
-            @if (isEdit)
+            @if (isEdit())
             {
                 <h4 class="fst-italic">
-                    <span>{{form?.controls?.['Name'].value}}</span>&nbsp;
-                    @if (!isValid) {
+                    <span>{{form().Name().value()}}</span>&nbsp;
+                    @if (!isFilterValid()) {
                         <fa-icon [icon]="faCircleExclamation" class="text-danger"></fa-icon>
                     }
                 </h4>
-                <input type="hidden" formControlName="Name" />
+                <input type="hidden" [formField]="form().Name" />
                 <hr />
             } @else {
                 <div class="form-floating mb-3">
-                    @let nameControl = form?.controls?.['Name'];
-                    @let nameErrors = nameControl?.errors;
-                    <input type="text" class="form-control" required id="filter-name" formControlName="Name"
-                        [ngClass]="{'is-invalid': nameErrors && form?.touched}" />
+                    @let name = form().Name();
+                    @let errors = name.errors();
+                    <input type="text" class="form-control" id="filter-name" [formField]="form().Name"
+                        [ngClass]="{'is-invalid': !name.valid() && formState().touched()}" />
                     <label for="filter-name">Name</label>
                     <div class="invalid-feedback">
-                        @if (nameErrors?.['required']) {
-                            Name Required!
+                        @for (error of errors; track error.kind) {
+                            @switch (error.kind) {
+                                @case ('required') {
+                                    <div>Name Required!</div>
+                                }
+                            }
                         }
                     </div>
                 </div>
             }
             <div class="form-floating mb-3">
-                @let templateControl = form?.controls?.['Template'];
-                @let templateErrors = templateControl?.errors;
-                <textarea class="form-control resize-none" required id="filter-template" [style.height]="'200px'"
-                    formControlName="Template" [ngClass]="{'is-invalid': templateErrors && form?.touched}"
+                @let template = form().Template();
+                <textarea class="form-control resize-none" id="filter-template" [style.height]="'200px'"
+                    [ngClass]="{'is-invalid': !template.valid() && formState().touched()}" [formField]="form().Template"
                     spellcheck="false"></textarea>
                 <label for="filter-template">Template</label>
                 <div class="invalid-feedback">
-                    @let missingParamsError = templateErrors?.['missingParameters'];
-                    @if (missingParamsError) {
-                        <div>Missing Parameters: {{missingParamsError}}</div>
-                    } @else if (templateErrors?.['required']) {
-                        <div>Template Required!</div>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row flex-fill">
-        <div class="col-2 border-end">
-            <h5>Parameters</h5>
-            <input type="hidden" formControlName="Parameters" />
-        </div>
-        <div class="col h-100 d-flex flex-column">
-            <div class="input-group" [formGroup]="paramForm!">
-                <div class="form-floating">
-                    @let keyControl = paramForm?.controls['Key'];
-                    <input type="text" class="form-control" id="param-key" required
-                        formControlName="Key" [ngClass]="{'is-invalid': !keyControl!.valid && keyControl!.touched}" />
-                    <label for="param-key">
-                        @if (paramForm?.controls['Key'].errors?.['duplicate']) {
-                            <span>Key already exists!</span>
-                        } @else {
-                            <span>Name</span>
+                    @for (error of template.errors(); track error) {
+                        @switch (error.kind) {
+                            @case ('required') {
+                                <div>Template Required!</div>
+                            }
+                            @case ('missing-parameters') {
+                                <div>Missing Parameters: {{error.message}}</div>
+                            }
                         }
-                    </label>
-                </div>
-                <div class="form-floating">
-                    @let valueControl = paramForm?.controls['Value'];
-                    <input type="text" class="form-control" id="param-value" required 
-                        [ngClass]="{'is-invalid': !valueControl!.valid && valueControl!.touched}"
-                        formControlName="Value" />
-                    <label for="param-value">Value</label>
-                </div>
-                @if (paramForm?.dirty) {
-                    <button type="button" class="btn btn-secondary" (click)="handleParamClear()" tooltip="Clear Parameter">
-                        <fa-icon [icon]="faEraser"></fa-icon>
-                    </button>
-                }
-                <button type="button" class="btn btn-primary" (click)="handleParamAdd()" [disabled]="!paramForm?.valid"
-                    tooltip="Add Parameter">
-                    <fa-icon [icon]="faPlus"></fa-icon>
-                </button>
-            </div>
-            @if (parameters?.length > 0) {
-                <hr />
-                <div class="d-flex flex-wrap gap-1 flex-fill overflow-auto align-content-start">
-                    @for (param of parameters; track param?.key) {
-                        <app-filter-parameter [param]="param" (paramRemove)="handleParamRemove(param.key)"
-                            (paramEdit)="handleParamEdit(param)"></app-filter-parameter>
                     }
                 </div>
-            }
+            </div>
         </div>
     </div>
+    <app-parameter-list [formField]="form().Parameters"></app-parameter-list>
 </form>

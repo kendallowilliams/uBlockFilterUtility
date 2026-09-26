@@ -32,7 +32,7 @@
             </div>
             <hr />
             <div class="form-floating">
-                <select class="form-select" id="selFilter" [(ngModel)]="selectedFilter" [disabled]="isLoading() || !!filterForm()?.dirty">
+                <select class="form-select" id="selFilter" [(ngModel)]="selectedFilter" [disabled]="isLoading() || !!filterFormState().dirty()">
                     <option [ngValue]="null">Select a filter</option>
                     @for (filter of filters$ | async; track filter.Id)
                     {
@@ -48,9 +48,7 @@
             </div>
             <hr />
             <div class="d-flex gap-1 justify-content-end">
-                @let isEditing = (filterForm()?.touched && filterForm()?.dirty) || paramsChanged();
-                @let canSave = filterForm()?.valid && filterForm()?.dirty;
-                @if (!isEditing) {
+                @if (!isEditing()) {
                     <button type="button" class="btn btn-info" (click)="handlePreview()" [disabled]="isLoading()"
                         tooltip="View Filter">
                         <fa-icon [icon]="faEye"></fa-icon>
@@ -60,9 +58,9 @@
                         <fa-icon [icon]="faCopy"></fa-icon>
                     </button>
                 }
-                @if (isEditing) {
+                @if (isEditing()) {
                     <button type="button" class="btn btn-primary" (click)="handleUpdate()" tooltip="Save Filter"
-                        [disabled]="isLoading() || !canSave">
+                        [disabled]="isLoading() || !canSave()">
                         <fa-icon [icon]="faSave"></fa-icon>
                     </button>
                     <button type="button" class="btn btn-danger" (click)="handleUndo()" tooltip="Undo Changes"
@@ -70,7 +68,7 @@
                         <fa-icon [icon]="faUndo"></fa-icon>
                     </button>
                 }
-                @if (!isEditing) {
+                @if (!isEditing()) {
                     <button type="button" class="btn btn-danger" (click)="handleDelete()" [disabled]="isLoading()"
                         tooltip="Delete Filter">
                         <fa-icon [icon]="faTrash"></fa-icon>

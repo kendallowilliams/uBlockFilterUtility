@@ -1,0 +1,56 @@
+<div class="row flex-fill">
+    <div class="col-2 border-end">
+        <h5>Parameters</h5>
+    </div>
+    <div class="col h-100 d-flex flex-column">
+        <form [formRoot]="form">
+            <div class="input-group">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="param-key"
+                        [ngClass]="{'is-invalid': !form.key().valid()}" [formField]="form.key" />
+                    <label for="param-key">
+                        @if (form.key().getError('required')) {
+                            <span>Key Required!</span>
+                        } @else if (form.key().getError('duplicate')) {
+                            <span>Key already exists!</span>
+                        } @else {
+                            <span>Name</span>
+                        }
+                    </label>
+                </div>
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="param-value"
+                        [ngClass]="{'is-invalid': !form.value().valid()}" [formField]="form.value" />
+                    <label for="param-value">
+                        @if (form.value().getError('required')) {
+                            <span>Value Required!</span>
+                        } @else {
+                            <span>Value</span>
+                        }</label>
+                </div>
+                @if (isEditing()) {
+                    <button type="button" class="btn btn-danger" (click)="handleParamClear()" tooltip="Clear Parameter">
+                        <fa-icon [icon]="faEraser"></fa-icon>
+                    </button>
+                    <button type="button" class="btn btn-success" (click)="handleParamSave()" tooltip="Clear Parameter" [disabled]="!canSave()">
+                        <fa-icon [icon]="faSave"></fa-icon>
+                    </button>
+                } @else {
+                    <button type="button" class="btn btn-primary" (click)="handleParamAdd()" [disabled]="false"
+                        tooltip="Add Parameter">
+                        <fa-icon [icon]="faPlus"></fa-icon>
+                    </button>
+                }
+            </div>
+            @if (parameters().length > 0) {
+                <hr />
+                <div class="d-flex flex-wrap gap-1 flex-fill overflow-auto align-content-start">
+                    @for (param of parameters(); track param?.key) {
+                        <app-filter-parameter [param]="param" (paramRemove)="handleParamRemove(param.key)"
+                            (paramEdit)="handleParamEdit(param)"></app-filter-parameter>
+                    }
+                </div>
+            }
+        </form>
+    </div>
+</div>

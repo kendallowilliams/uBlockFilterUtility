@@ -1,17 +1,11 @@
 import { FormControl } from "@angular/forms";
+import { FilterParameters } from "./filter-parameter.model";
 
 export interface FilterModel {
-    Id: number | null;
-    Name: string | null;
-    Parameters: {[key: string]: string},
+    Id: number;
+    Name: string;
+    Parameters: FilterParameters;
     Template: string;
-}
-
-export interface FilterModelForm {
-    Id: FormControl<number | null>;
-    Name: FormControl<string | null>;
-    Parameters: FormControl<{[key: string]: string} | null>;
-    Template: FormControl<string | null>;
 }
 
 export interface ApiFilterRequest {
