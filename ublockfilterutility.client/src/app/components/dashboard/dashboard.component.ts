@@ -183,6 +183,7 @@ export class DashboardComponent implements OnInit {
             .subscribe(preview => {
                 this.messageBoxService.alert({
                     options: {
+                        class: 'modal-lg modal-dialog-centered',
                         initialState: {
                             context: {
                                 title: `"${filter.Name!}" Preview`,

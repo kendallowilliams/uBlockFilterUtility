@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { faEye, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FilterParameter } from '../../../shared/models/param.model';
+import { MessageBoxService } from '../../../shared/services/message-box.service';
 
 @Component({
   selector: 'app-filter-parameter',
@@ -17,9 +18,20 @@ export class FilterParameterComponent {
   protected faEye = faEye;
   protected faPencil = faPencil;
 
+  constructor(private messageBoxService: MessageBoxService) {}
+
   protected handlePreview(): void {
-    const message = `Key: ${this.param?.key}\r\nValue: ${this.param?.value}`;
-    alert(message);
+    this.messageBoxService.alert({
+        options: {
+          class: 'modal-lg modal-dialog-centered',
+          initialState: {
+            context: {
+              title: `"${this.param?.key}" Preview`,
+              message: this.param?.value!
+            }
+          }
+        }
+    });
   }
 
   protected handleEdit(): void {
