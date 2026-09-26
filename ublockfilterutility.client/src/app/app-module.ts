@@ -13,7 +13,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { FilterModalComponent } from './components/modals/filter-modal/filter-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterService } from './shared/services/filter.service';
-import { FilterParameterComponent } from './components/filter/filter-parameter/filter-parameter.component';
+import { FilterParameterComponent } from './components/parameter-list/filter-parameter/filter-parameter.component';
 import { APP_BASE_HREF } from '@angular/common';
 import { ModalDirective } from './components/modals/directives/modal.directive';
 import { StoreModule } from '@ngrx/store';
