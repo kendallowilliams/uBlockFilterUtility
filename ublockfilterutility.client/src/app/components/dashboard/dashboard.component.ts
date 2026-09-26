@@ -2,7 +2,7 @@ import { Component, DestroyRef, effect, inject, OnInit, signal, ViewChild, ViewC
 import { faCopy, faEye, faFileExport, faPlus, faSave, faSpinner, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { FilterModel, FilterModelForm } from '../../shared/models/filter.model';
 import { FilterModalComponent } from '../modals/filter-modal/filter-modal.component';
-import { finalize, Observable, Subject, takeUntil } from 'rxjs';
+import { finalize, Observable, Subject, take, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { FiltersApiActions } from '../../shared/stores/filter/filters.actions';
 import { selectFilters, selectFiltersLoading, selectIdMappings } from '../../shared/stores/filter/filters.selectors';
@@ -18,6 +18,7 @@ import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { ModalConfig } from '../../shared/models/modal-config.model';
 import { MessageBoxModalComponent } from '../modals/message-box-modal/message-box-modal.component';
 import { HtmlUtils } from '../../shared/utils/html.utilts';
+import { ThemeService } from '../../shared/services/theme.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -42,6 +43,8 @@ export class DashboardComponent implements OnInit {
     protected readonly exportUrl?: string;
     protected filterForm = signal<FormGroup<FilterModelForm> | null>(null);
     protected paramsChanged = signal<boolean>(false);
+    protected idGenerator$: Observable<string> = HtmlUtils.getIdGenerator();
+    protected darkModeEnabled = signal<boolean>(false);
 
     private destroyRef = inject(DestroyRef);
     private selectedFilterLocalId: string | null = null;
@@ -51,7 +54,8 @@ export class DashboardComponent implements OnInit {
         private store: Store<FilterState>, 
         private filterService: FilterService,
         private fb: FormBuilder,
-        private messageBoxService: MessageBoxService
+        private messageBoxService: MessageBoxService,
+        private themeService: ThemeService
     ) {
         const destroySub = new Subject<void>();
 
@@ -59,6 +63,12 @@ export class DashboardComponent implements OnInit {
         effect(() => {
             destroySub.next();
             this.loadSelectedFilter(this.selectedFilter(), destroySub);
+        });
+        this.themeService.getDarkModeEnabled()
+            .pipe(take(1))
+            .subscribe(enabled => this.darkModeEnabled.set(enabled));
+        effect(() => {
+            this.themeService.setDarkMode(this.darkModeEnabled());
         });
     }
     

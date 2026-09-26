@@ -6,24 +6,31 @@
 <div class="container h-100 d-flex flex-column">
     <div class="row">
         <div class="col">
-            <div class="d-flex">
+            <div class="d-flex align-items-center">
                 <h4 class="flex-fill m-0 p-0">uBlock Filter Utility</h4>
-                <div class="d-flex gap-1">
-                    <a class="btn btn-secondary btn-sm" [href]="exportUrl" download="filters.txt"
-                        tooltip="Export Filters">
-                        <fa-icon [icon]="faFileExport"></fa-icon>
-                    </a>
-                    <button type="button" class="btn btn-sm btn-primary" (click)="handleAdd()" [disabled]="isLoading()"
-                        tooltip="Add Filter">
-                        <fa-icon [icon]="faPlus"></fa-icon>
-                    </button>
-                </div>
+                 <div class="form-check form-switch">
+                    @let themeSwitchId = idGenerator$ | async;
+                    <input type="checkbox" role="switch" class="form-check-input" data-on-text="On" data-off-text="Off"
+                        id="{{themeSwitchId}}" [(ngModel)]="darkModeEnabled" />
+                    <label for="{{themeSwitchId}}">Dark Mode</label>
+                 </div>
             </div>
         </div>
     </div>
     <hr />
     <div class="row flex-fill">
-        <div class="col-3 border-end">
+        <div class="col-3 border-end d-flex flex-column">
+            <div class="d-flex gap-1 justify-content-end align-items-center">
+                <a class="btn btn-secondary btn-sm" [href]="exportUrl" download="filters.txt"
+                    tooltip="Export Filters">
+                    <fa-icon [icon]="faFileExport"></fa-icon>
+                </a>
+                <button type="button" class="btn btn-sm btn-primary" (click)="handleAdd()" [disabled]="isLoading()"
+                    tooltip="Add Filter">
+                    <fa-icon [icon]="faPlus"></fa-icon>
+                </button>
+            </div>
+            <hr />
             <div class="form-floating">
                 <select class="form-select" id="selFilter" [(ngModel)]="selectedFilter" [disabled]="isLoading() || !!filterForm()?.dirty">
                     <option [ngValue]="null">Select a filter</option>

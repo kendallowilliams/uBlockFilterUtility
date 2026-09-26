@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalContext, MessageBoxModalType } from '../../../shared/models/modal-config.model';
-import { map, Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { HtmlUtils } from '../../../shared/utils/html.utilts';
 import { faCircleQuestion, faCircleXmark, faWarning } from '@fortawesome/free-solid-svg-icons';
 
@@ -16,15 +16,13 @@ export class MessageBoxModalComponent implements OnDestroy, OnInit {
 
     @Output() public submit = new EventEmitter<string | null>();
 
-    protected idGenerator$: Observable<string> | null = null;
+    protected idGenerator$: Observable<string> = HtmlUtils.getIdGenerator();
     protected faCircleXmark = faCircleXmark;
     protected faCircleQuestion = faCircleQuestion;
     protected faWarning = faWarning;
     protected response?: string | null = null;
 
-    constructor(protected modalRef: BsModalRef) {
-        this.idGenerator$ = of().pipe(map(() => HtmlUtils.generateId()));
-    }
+    constructor(protected modalRef: BsModalRef) {}
 
     public ngOnInit(): void {
         this.response = this.context?.initialResponse;

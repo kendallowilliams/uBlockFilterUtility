@@ -19,6 +19,7 @@ import { FILTER_REDUCER_KEY, filtersReducers } from './shared/stores/filter/filt
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { MessageBoxModalComponent } from './components/modals/message-box-modal/message-box-modal.component';
 import { MessageBoxService } from './shared/services/message-box.service';
+import { ThemeService } from './shared/services/theme.service';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { MessageBoxService } from './shared/services/message-box.service';
       },
     },
     MessageBoxService,
-    provideZonelessChangeDetection()
+    provideZonelessChangeDetection(),
+    ThemeService
   ],
   bootstrap: [AppComponent],
 })
