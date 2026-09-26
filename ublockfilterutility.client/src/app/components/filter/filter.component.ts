@@ -80,7 +80,7 @@ export class FilterComponent implements OnInit {
                     param.value = response;
                     control.markAsTouched();
                     control.markAsDirty();
-                    control.patchValue(Object.assign({[param.key]: response}, control.value));
+                    control.patchValue(Object.assign({...control.value}, {[param.key]: response}));
                 }
             });
     }
