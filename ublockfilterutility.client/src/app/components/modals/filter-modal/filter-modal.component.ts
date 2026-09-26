@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, input, model, OnDestroy, Output } from '@angular/core';
+import { Component, computed, model, output } from '@angular/core';
 import { FilterModel } from '../../../shared/models/filter.model';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { FieldTree } from '@angular/forms/signals';
@@ -8,20 +8,16 @@ import { FieldTree } from '@angular/forms/signals';
     templateUrl: 'filter-modal.component.html',
     standalone: false
 })
-export class FilterModalComponent implements OnDestroy {
+export class FilterModalComponent {
     public form = model<FieldTree<FilterModel>>();
     public isCopy = model(false);
 
     public formState = computed(() => this.form()?.());
 
-    @Output() public addFilter = new EventEmitter();
-    @Output() public copyFilter = new EventEmitter();
+    public addFilter = output();
+    public copyFilter = output();
 
     constructor(protected modalRef: BsModalRef) {}
-    
-    public ngOnDestroy(): void {
-        this.addFilter.complete();
-    }
 
     protected handleAdd(): void {
         if (this.isCopy()) {

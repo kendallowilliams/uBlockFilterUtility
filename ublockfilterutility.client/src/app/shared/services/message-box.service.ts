@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-import { BsModalService } from "ngx-bootstrap/modal";
-import { ModalConfig, MessageBoxModalType } from '../models/modal-config.model';
+import { BsModalService, ModalOptions } from "ngx-bootstrap/modal";
+import { ModalConfig, ModalContext } from '../models/modal-config.model';
 import { MessageBoxModalComponent } from "../../components/modals/message-box-modal/message-box-modal.component";
-import { defaultIfEmpty, filter, map, Observable, takeUntil } from "rxjs";
+import { defaultIfEmpty, map, Observable, takeUntil } from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -10,60 +10,58 @@ import { defaultIfEmpty, filter, map, Observable, takeUntil } from "rxjs";
 export class MessageBoxService {
     constructor(private bsModal: BsModalService) {}
 
-    public confirm(config: ModalConfig<MessageBoxModalComponent>): Observable<boolean> {
-        const options = this.setModalType(config.options, 'confirm')!;
-        const modalRef = this.bsModal.show(MessageBoxModalComponent, options);
+    public confirm(context: ModalContext): Observable<boolean> {
+        const modalRef = this.bsModal.show(MessageBoxModalComponent, this.getDefaultOptions());
+
+        modalRef.content?.type.set('confirm');
+        modalRef.content?.context.set(context);
 
         return new Observable<boolean>(subscriber => {
             modalRef.content?.submit
-                .pipe(
-                    takeUntil(modalRef.onHidden!.asObservable()),
-                    map(() => true),
-                    defaultIfEmpty(false)
-                )
-                .subscribe(proceed => {
-                    subscriber.next(proceed);
+                .subscribe(() => {
+                    subscriber.next(true);
                     subscriber.complete();
                 });
         });
     }
 
-    public warn(config: ModalConfig<MessageBoxModalComponent>): Observable<boolean> {
-        const options = this.setModalType(config.options, 'warn')!;
-        const modalRef =this.bsModal.show(MessageBoxModalComponent, options);
+    public warn(context: ModalContext): Observable<boolean> {
+        const modalRef =this.bsModal.show(MessageBoxModalComponent, this.getDefaultOptions());
+
+        modalRef.content?.type.set('warn');
+        modalRef.content?.context.set(context);
 
         return new Observable<boolean>(subscriber => {
             modalRef.content?.submit
-                .pipe(
-                    takeUntil(modalRef.onHidden!.asObservable()),
-                    map(() => true),
-                    defaultIfEmpty(false)
-                )
-                .subscribe(proceed => {
-                    subscriber.next(proceed);
+                .subscribe(() => {
+                    subscriber.next(true);
                     subscriber.complete();
                 });
         });
     }
 
-    public error(config: ModalConfig<MessageBoxModalComponent>): void {
-        const options = this.setModalType(config.options, 'error');
-        
-        this.bsModal.show(MessageBoxModalComponent, options!);
+    public error(context: ModalContext): void {
+        const modalRef = this.bsModal.show(MessageBoxModalComponent, this.getDefaultOptions());
+
+        modalRef.content?.type.set('confirm');
+        modalRef.content?.context.set(context);
     }
 
-    public alert(config: ModalConfig<MessageBoxModalComponent>): void {
-        const options = this.setModalType(config.options, 'alert');
-        this.bsModal.show(MessageBoxModalComponent, options!);
+    public alert(context: ModalContext): void {
+        const modalRef = this.bsModal.show(MessageBoxModalComponent, this.getDefaultOptions());
+
+        modalRef.content?.type.set('confirm');
+        modalRef.content?.context.set(context);
     }
 
-    public prompt(config: ModalConfig<MessageBoxModalComponent>): Observable<string> {
-        const options = this.setModalType(config.options, 'prompt');
-        const modalRef = this.bsModal.show(MessageBoxModalComponent, options!);
+    public prompt(context: ModalContext): Observable<string> {
+        const modalRef = this.bsModal.show(MessageBoxModalComponent, this.getDefaultOptions());
+
+        modalRef.content?.type.set('prompt');
+        modalRef.content?.context.set(context);
 
         return new Observable<string>(subscriber => {
             modalRef.content?.submit
-                .pipe(takeUntil(modalRef.onHidden!.asObservable()), filter(response => !!response))
                 .subscribe(response => {
                     subscriber.next(response!);
                     subscriber.complete();
@@ -71,14 +69,9 @@ export class MessageBoxService {
         });
     }
 
-    private setModalType(
-        options: ModalConfig<MessageBoxModalComponent>['options'], type: MessageBoxModalType
-    ): ModalConfig<MessageBoxModalComponent>['options'] | null {
-        if (options?.initialState) {
-            options.initialState.type = type;
-            return options;
-        }
-
-        return null;
+    private getDefaultOptions(): ModalOptions<MessageBoxModalComponent> {
+        return {
+            class: 'modal-lg modal-dialog-centered'
+        };
     }
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, model, Output } from '@angular/core';
+import { Component, model, output } from '@angular/core';
 import { faEye, faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FilterParameter } from '../../../shared/models/filter-parameter.model';
 import { MessageBoxService } from '../../../shared/services/message-box.service';
@@ -12,8 +12,8 @@ export class FilterParameterComponent {
   public param = model.required<FilterParameter>();
   public disabled = model(false);
 
-  @Output() public paramEdit = new EventEmitter();
-  @Output() public paramRemove = new EventEmitter();
+  public paramEdit = output();
+  public paramRemove = output();
 
   protected faTrash = faTrash;
   protected faEye = faEye;
@@ -22,17 +22,11 @@ export class FilterParameterComponent {
   constructor(private messageBoxService: MessageBoxService) {}
 
   protected handlePreview(): void {
-    this.messageBoxService.alert({
-        options: {
-          class: 'modal-lg modal-dialog-centered',
-          initialState: {
-            context: {
-              title: `"${this.param().key}" Preview`,
-              message: this.param().value
-            }
-          }
-        }
-    });
+    const context = {
+        title: `"${this.param().key}" Preview`,
+        message: this.param().value
+    };
+    this.messageBoxService.alert(context);
   }
 
   protected handleEdit(): void {

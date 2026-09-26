@@ -115,19 +115,12 @@ export class DashboardComponent implements OnInit {
         };
 
         if (this.filterFormState().dirty()) {
-            const modalConfig: ModalConfig<MessageBoxModalComponent> = {
-                options: {
-                    class: 'modal-lg modal-dialog-centered',
-                    initialState: {
-                        context: { 
-                            title: 'Unsaved Changes', 
-                            message: 'Are you sure you want to leave? Unsaved changes will be lost.'
-                        }
-                    }
-                }
+            const context = { 
+                title: 'Unsaved Changes', 
+                message: 'Are you sure you want to leave? Unsaved changes will be lost.'
             };
 
-            this.messageBoxService.warn(modalConfig).subscribe(proceed => proceed && addFn());
+            this.messageBoxService.warn(context).subscribe(proceed => proceed && addFn());
         } else {
             addFn();
         }
@@ -167,19 +160,12 @@ export class DashboardComponent implements OnInit {
         };
 
         if (this.filterFormState().dirty()) {
-            const modalConfig: ModalConfig<MessageBoxModalComponent> = {
-                options: {
-                    class: 'modal-lg modal-dialog-centered',
-                    initialState: {
-                        context: { 
-                            title: 'Unsaved Changes', 
-                            message: 'Are you sure you want to leave? Unsaved changes will be lost.'
-                        }
-                    }
-                }
+            const context = { 
+                title: 'Unsaved Changes', 
+                message: 'Are you sure you want to leave? Unsaved changes will be lost.'
             };
 
-            this.messageBoxService.warn(modalConfig).subscribe(proceed => proceed && copyFn());
+            this.messageBoxService.warn(context).subscribe(proceed => proceed && copyFn());
         } else {
             copyFn();
         }
@@ -193,15 +179,8 @@ export class DashboardComponent implements OnInit {
             .pipe(finalize(() => this.isLoading.set(false)))
             .subscribe(preview => {
                 this.messageBoxService.alert({
-                    options: {
-                        class: 'modal-lg modal-dialog-centered',
-                        initialState: {
-                            context: {
-                                title: `"${filter.Name!}" Preview`,
-                                message: preview
-                            }
-                        }
-                    }
+                    title: `"${filter.Name!}" Preview`,
+                    message: preview
                 });
             });
     }
@@ -210,16 +189,8 @@ export class DashboardComponent implements OnInit {
         const filterToDelete = this.selectedFilter()!;
         const title = `Delete "${filterToDelete.Name}"`;
         const message = `Are you sure you want to delete "${filterToDelete.Name}"?`;
-        const modalConfig: ModalConfig<MessageBoxModalComponent> = {
-            options: {
-                class: 'modal-lg modal-dialog-centered',
-                initialState: {
-                    context: { title, message }
-                }
-            }
-        };
 
-        this.messageBoxService.warn(modalConfig)
+        this.messageBoxService.warn({ title, message })
             .subscribe((proceed: boolean): void => {
                 if (proceed) {
                     this.store.dispatch(FiltersApiActions.deleteFilter({id: filterToDelete.Id!}));

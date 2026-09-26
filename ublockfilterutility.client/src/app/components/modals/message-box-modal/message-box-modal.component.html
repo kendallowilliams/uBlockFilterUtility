@@ -1,6 +1,6 @@
 <div class="modal-header">
     <h4 class="modal-title pull-left">
-        @switch(type) {
+        @switch(type()) {
             @case ('warn') {
                 <fa-icon [icon]="faWarning" class="text-warning"></fa-icon>
             }
@@ -8,28 +8,28 @@
                 <fa-icon [icon]="faCircleXmark" class="text-danger"></fa-icon>
             }
         }
-        {{context?.title}}
+        {{context()?.title}}
     </h4>
     <button type="button" class="btn-close close pull-right" (click)="modalRef?.hide()">
         <span aria-hidden="true" class="visually-hidden">&times;</span>
     </button>
 </div>
 <div class="modal-body">
-    @switch(type) {
+    @switch(type()) {
         @case ('prompt') {
             @let txtAreaId = idGenerator$ | async;
             <div class="form-floating">
                 <textarea id="{{txtAreaId}}" [(ngModel)]="response" class="form-control" [style.height]="'200px'"></textarea>
-                <label for="{{txtAreaId}}">{{context?.message}}</label>
+                <label for="{{txtAreaId}}">{{context()?.message}}</label>
             </div>
         } 
         @default {
-            {{context?.message}}
+            {{context()?.message}}
         }
     }
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="modalRef?.hide()">Cancel</button>
     <button type="button" class="btn btn-primary" (click)="handleSubmit()" 
-        [disabled]="type === 'prompt' && !response">OK</button>
+        [disabled]="type() === 'prompt' && !response()">OK</button>
 </div>

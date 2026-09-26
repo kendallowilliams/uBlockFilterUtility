@@ -6,9 +6,10 @@
         <form [formRoot]="form">
             <div class="input-group">
                 <div class="form-floating">
-                    <input type="text" class="form-control" id="param-key"
+                    @let keyId = idGenerator$ | async;
+                    <input type="text" class="form-control" id="{{keyId}}"
                         [ngClass]="{'is-invalid': !form.key().valid()}" [formField]="form.key" />
-                    <label for="param-key">
+                    <label for="{{keyId}}">
                         @if (form.key().getError('required')) {
                             <span>Key Required!</span>
                         } @else if (form.key().getError('duplicate')) {
@@ -19,9 +20,10 @@
                     </label>
                 </div>
                 <div class="form-floating">
-                    <input type="text" class="form-control" id="param-value"
+                    @let valueId = idGenerator$ | async;
+                    <input type="text" class="form-control" id="{{valueId}}"
                         [ngClass]="{'is-invalid': !form.value().valid()}" [formField]="form.value" />
-                    <label for="param-value">
+                    <label for="{{valueId}}">
                         @if (form.value().getError('required')) {
                             <span>Value Required!</span>
                         } @else {
@@ -36,8 +38,7 @@
                         <fa-icon [icon]="faSave"></fa-icon>
                     </button>
                 } @else {
-                    <button type="button" class="btn btn-primary" (click)="handleParamAdd()" [disabled]="false"
-                        tooltip="Add Parameter">
+                    <button type="button" class="btn btn-primary" (click)="handleParamAdd()" tooltip="Add Parameter">
                         <fa-icon [icon]="faPlus"></fa-icon>
                     </button>
                 }

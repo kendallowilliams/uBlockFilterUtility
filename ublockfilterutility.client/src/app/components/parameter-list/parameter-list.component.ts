@@ -6,6 +6,8 @@ import { MessageBoxService } from '../../shared/services/message-box.service';
 import { ModalConfig } from '../../shared/models/modal-config.model';
 import { MessageBoxModalComponent } from '../modals/message-box-modal/message-box-modal.component';
 import { FilterUtils } from '../../shared/utils/filter.utils';
+import { Observable } from 'rxjs';
+import { HtmlUtils } from '../../shared/utils/html.utilts';
 
 @Component({
   selector: 'app-parameter-list',
@@ -37,6 +39,7 @@ export class ParameterListComponent implements FormValueControl<FilterParameters
     });
     protected isEditing = signal(false);
     protected canSave = computed(() => this.form().valid());
+    protected idGenerator$: Observable<string> = HtmlUtils.getIdGenerator();
 
     constructor(private messageBoxService: MessageBoxService) {}
 
@@ -57,26 +60,13 @@ export class ParameterListComponent implements FormValueControl<FilterParameters
     }
 
     protected handleParamEdit(param: FilterParameter): void {
-        const modalConfig: ModalConfig<MessageBoxModalComponent> = {
-            options: {
-                class: 'modal-lg modal-dialog-centered',
-                initialState: {
-                    context: { 
-                        title: `Update "${param.key}"`, 
-                        message: 'Value',
-                        initialResponse: param.value
-                    }
-                }
-            }
+        const context = { 
+            title: `Update "${param.key}"`, 
+            message: 'Value',
+            initialResponse: param.value
         };
 
-        this.messageBoxService.prompt(modalConfig)
-            .subscribe(response => {
-                if (response) {
-                    param.value = response;
-                    this.value.set(Object.assign({...this.value()}, {[param.key]: response}));
-                }
-            });
+        this.messageBoxService.prompt(context);
     }
 
 
