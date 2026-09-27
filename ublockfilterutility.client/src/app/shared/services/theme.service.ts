@@ -1,6 +1,7 @@
 import { effect, Injectable, RendererFactory2, signal } from "@angular/core";
 import { toObservable } from "@angular/core/rxjs-interop";
 import { Observable } from "rxjs";
+import { AppCallback } from "../types/callback.type";
 
 @Injectable({
     providedIn: 'root'
@@ -13,11 +14,12 @@ export class ThemeService {
 
     constructor(private rendererFactory: RendererFactory2) {
         const renderer = this.rendererFactory.createRenderer(null, null);
-        let unlistener: () => void;
-        const getOverride: () => boolean = () => !!localStorage.getItem(this.darkModeKey);
+        let unlistener: AppCallback | null;
+        const getOverride: AppCallback<void, boolean> = () => !!localStorage.getItem(this.darkModeKey);
 
         effect(() => {
             unlistener?.();
+            unlistener = null;
             if (!this.overrideOsThemeEnabled()) {
                 unlistener = renderer.listen(
                     this.mediaQuery, 
