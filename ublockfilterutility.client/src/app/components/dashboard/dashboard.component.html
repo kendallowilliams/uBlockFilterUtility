@@ -32,14 +32,15 @@
             </div>
             <hr />
             <div class="form-floating">
-                <select class="form-select" id="selFilter" [(ngModel)]="selectedFilter" [disabled]="isLoading() || isEditing()">
+                @let selFiltersId = idGenerator$ | async;
+                <select class="form-select" id="{{selFiltersId}}" [(ngModel)]="selectedFilter" [disabled]="isLoading() || isEditing()">
                     <option [ngValue]="null">Select a filter</option>
                     @for (filter of filters$ | async; track filter.Id)
                     {
                         <option [ngValue]="filter">{{filter.Name}}</option>
                     }
                 </select>
-                <label for="selFilter">Filters</label>
+                <label for="{{selFiltersId}}">Filters</label>
             </div>
         </div>
         <div class="col d-flex flex-column" [ngClass]="{'d-none': !selectedFilter()}">
