@@ -8,7 +8,7 @@
                 <div class="form-floating">
                     @let keyId = idGenerator$ | async;
                     <input type="text" class="form-control" id="{{keyId}}"
-                        [ngClass]="{'is-invalid': !form.key().valid()}" [formField]="form.key" />
+                        [ngClass]="{'is-invalid': !form.key().valid() && form.key().touched()}" [formField]="form.key" />
                     <label for="{{keyId}}">
                         @if (form.key().getError('required')) {
                             <span>Key Required!</span>
@@ -22,7 +22,7 @@
                 <div class="form-floating">
                     @let valueId = idGenerator$ | async;
                     <input type="text" class="form-control" id="{{valueId}}"
-                        [ngClass]="{'is-invalid': !form.value().valid()}" [formField]="form.value" />
+                        [ngClass]="{'is-invalid': !form.value().valid() && form.value().touched()}" [formField]="form.value" />
                     <label for="{{valueId}}">
                         @if (form.value().getError('required')) {
                             <span>Value Required!</span>

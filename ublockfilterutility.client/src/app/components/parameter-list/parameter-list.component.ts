@@ -21,14 +21,14 @@ export class ParameterListComponent implements FormValueControl<FilterParameters
     protected parameters = computed<FilterParameter[]>(() => this.value() ? FilterUtils.toParameterArray(this.value()) : []);
     protected model = signal<FilterParameter>({key: '', value: ''})
     protected form = form<FilterParameter>(this.model, schema => {
-        required(schema.key, {when: field => field.state.touched()}),
-        required(schema.value, {when: field => field.state.touched()}),
+        required(schema.key),
+        required(schema.value),
         disabled(schema.key, {when: () => !this.isEditing()}),
         disabled(schema.value, {when: () => !this.isEditing()}),
         validate(schema.key, ({value}) => FilterUtils.isDuplicateKey(value(), this.parameters()) ? { kind: 'duplicate' } : null)
     });
     protected isEditing = signal(false);
-    protected canSave = computed(() => this.form().valid());
+    protected canSave = computed(() => this.form().valid() && this.form().touched());
     protected idGenerator$: Observable<string> = HtmlUtils.getIdGenerator();
 
     constructor(private messageBoxService: MessageBoxService) {}
