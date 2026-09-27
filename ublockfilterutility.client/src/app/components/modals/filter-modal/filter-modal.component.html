@@ -11,5 +11,6 @@
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="modalRef?.hide()">Cancel</button>
-    <button type="button" class="btn btn-primary" #btnSubmit [disabled]="!formState()?.valid()" (click)="handleAdd()">{{isCopy() ? 'Copy' : 'Add'}}</button>
+    <button type="button" class="btn btn-primary" #btnSubmit [disabled]="!formState()?.valid()" 
+        (click)="handleAdd()">{{isCopy() ? 'Copy' : 'Add'}}</button>
 </div>

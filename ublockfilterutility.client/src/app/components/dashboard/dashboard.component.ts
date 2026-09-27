@@ -12,11 +12,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FilterComponent } from '../filter/filter.component';
 import { MessageBoxService } from '../../shared/services/message-box.service';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { ModalConfig } from '../../shared/models/modal-config.model';
-import { MessageBoxModalComponent } from '../modals/message-box-modal/message-box-modal.component';
 import { HtmlUtils } from '../../shared/utils/html.utilts';
 import { ThemeService } from '../../shared/services/theme.service';
-import { FieldState, FieldTree, form, required, validate } from '@angular/forms/signals';
+import { FieldTree, form, required, validate } from '@angular/forms/signals';
 import { FilterUtils } from '../../shared/utils/filter.utils';
 import { InjectionContextService } from '../../shared/services/injection-context.service';
 

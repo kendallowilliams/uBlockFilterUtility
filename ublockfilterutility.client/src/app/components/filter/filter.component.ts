@@ -1,7 +1,6 @@
 import { Component, computed, model } from "@angular/core";
 import { FilterModel } from "../../shared/models/filter.model";
 import { faCircleExclamation, faEraser, faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FilterParameter } from "../../shared/models/filter-parameter.model";
 import { FieldTree } from "@angular/forms/signals";
 
 @Component({
@@ -19,5 +18,4 @@ export class FilterComponent {
     protected faTrash = faTrash;
     protected faEraser = faEraser;
     protected faCircleExclamation = faCircleExclamation;
-    protected parameters: FilterParameter[] = [];
 }

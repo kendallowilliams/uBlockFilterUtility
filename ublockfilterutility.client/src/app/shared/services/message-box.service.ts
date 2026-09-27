@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { BsModalService, ModalOptions } from "ngx-bootstrap/modal";
-import { ModalConfig, ModalContext } from '../models/modal-config.model';
+import { ModalContext } from '../models/modal-config.model';
 import { MessageBoxModalComponent } from "../../components/modals/message-box-modal/message-box-modal.component";
-import { defaultIfEmpty, map, Observable, takeUntil } from "rxjs";
+import { Observable } from "rxjs";
 
 @Injectable({
     providedIn: 'root'

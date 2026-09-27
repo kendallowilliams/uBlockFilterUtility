@@ -1,4 +1,3 @@
-import { FormControl } from "@angular/forms";
 import { FilterParameters } from "./filter-parameter.model";
 
 export interface FilterModel {
