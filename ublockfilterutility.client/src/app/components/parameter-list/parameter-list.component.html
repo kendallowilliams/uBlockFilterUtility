@@ -12,9 +12,9 @@
                         [ngClass]="{'is-invalid': keyInvalid}" [formField]="form.key" />
                     <label for="{{keyId}}">
                         @if (form.key().getError('required') && form.value().touched()) {
-                            <span>Key Required!</span>
+                            <span>Name Required!</span>
                         } @else if (form.key().getError('duplicate') && form.value().touched()) {
-                            <span>Key already exists!</span>
+                            <span>Name already exists!</span>
                         } @else {
                             <span>Name</span>
                         }
