@@ -7,12 +7,13 @@
             <div class="input-group">
                 <div class="form-floating">
                     @let keyId = idGenerator$ | async;
+                    @let keyInvalid = !form.key().valid() && form.key().touched();
                     <input type="text" class="form-control" id="{{keyId}}"
-                        [ngClass]="{'is-invalid': !form.key().valid() && form.key().touched()}" [formField]="form.key" />
+                        [ngClass]="{'is-invalid': keyInvalid}" [formField]="form.key" />
                     <label for="{{keyId}}">
-                        @if (form.key().getError('required')) {
+                        @if (form.key().getError('required') && form.value().touched()) {
                             <span>Key Required!</span>
-                        } @else if (form.key().getError('duplicate')) {
+                        } @else if (form.key().getError('duplicate') && form.value().touched()) {
                             <span>Key already exists!</span>
                         } @else {
                             <span>Name</span>
@@ -21,10 +22,11 @@
                 </div>
                 <div class="form-floating">
                     @let valueId = idGenerator$ | async;
+                    @let valueInvalid = !form.value().valid() && form.value().touched();
                     <input type="text" class="form-control" id="{{valueId}}"
-                        [ngClass]="{'is-invalid': !form.value().valid() && form.value().touched()}" [formField]="form.value" />
+                        [ngClass]="{'is-invalid': valueInvalid}" [formField]="form.value" />
                     <label for="{{valueId}}">
-                        @if (form.value().getError('required')) {
+                        @if (form.value().getError('required') && valueInvalid) {
                             <span>Value Required!</span>
                         } @else {
                             <span>Value</span>
