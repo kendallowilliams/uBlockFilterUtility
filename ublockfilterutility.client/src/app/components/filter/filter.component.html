@@ -1,6 +1,6 @@
 <form class="needs-validation h-100 d-flex flex-column" novalidate [formRoot]="form()">
-    <div class="row">
-        <div class="col">
+    <div class="row flex-fill">
+        <div class="col d-flex flex-column">
             @if (isEdit())
             {
                 <h4 class="fst-italic">
@@ -16,7 +16,7 @@
                     @let name = form().Name();
                     @let errors = name.errors();
                     <input type="text" class="form-control" id="filter-name" [formField]="form().Name"
-                        [ngClass]="{'is-invalid': !name.valid() && formState().touched()}" />
+                        [ngClass]="{'is-invalid': !name.valid() && name.touched()}" />
                     <label for="filter-name">Name</label>
                     <div class="invalid-feedback">
                         @for (error of errors; track error.kind) {
@@ -29,10 +29,10 @@
                     </div>
                 </div>
             }
-            <div class="form-floating mb-3">
+            <div class="form-floating mb-3 flex-fill">
                 @let template = form().Template();
-                <textarea class="form-control resize-none" id="filter-template" [style.height]="'200px'"
-                    [ngClass]="{'is-invalid': !template.valid() && formState().touched()}" [formField]="form().Template"
+                <textarea class="form-control resize-none h-100" id="filter-template"
+                    [ngClass]="{'is-invalid': !template.valid() && template.touched()}" [formField]="form().Template"
                     spellcheck="false"></textarea>
                 <label for="filter-template">Template</label>
                 <div class="invalid-feedback">

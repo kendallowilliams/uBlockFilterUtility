@@ -37,7 +37,6 @@ export class DashboardComponent implements OnInit {
     protected faUndo = faUndo;
     protected isLoading = signal<boolean>(false);
     protected filters$?: Observable<FilterModel[]>;
-    protected filters: FilterModel[] = [];
     protected readonly exportUrl?: string;
     protected filterForm: Signal<FieldTree<FilterModel>>;
     protected filterFormState: FieldTree<FilterModel>;
