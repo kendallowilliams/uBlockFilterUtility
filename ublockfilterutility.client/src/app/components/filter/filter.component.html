@@ -29,9 +29,9 @@
                     </div>
                 </div>
             }
-            <div class="form-floating mb-3 flex-fill">
+            <div class="form-floating flex-fill d-flex flex-column">
                 @let template = form().Template();
-                <textarea class="form-control resize-none h-100" id="filter-template"
+                <textarea class="form-control resize-none flex-fill" id="filter-template"
                     [ngClass]="{'is-invalid': !template.valid() && template.touched()}" [formField]="form().Template"
                     spellcheck="false"></textarea>
                 <label for="filter-template">Template</label>
@@ -50,5 +50,6 @@
             </div>
         </div>
     </div>
+    <hr />
     <app-parameter-list [formField]="form().Parameters"></app-parameter-list>
 </form>
