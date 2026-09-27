@@ -22,11 +22,11 @@
         <div class="col-3 border-end d-flex flex-column">
             <div class="d-flex gap-1 justify-content-end align-items-center">
                 <a class="btn btn-secondary btn-sm" [href]="exportUrl" download="filters.txt"
-                    tooltip="Export Filters">
+                    title="Export Filters" role="button">
                     <fa-icon [icon]="faFileExport"></fa-icon>
                 </a>
                 <button type="button" class="btn btn-sm btn-primary" (click)="handleAdd()" [disabled]="isLoading()"
-                    tooltip="Add Filter">
+                    title="Add Filter">
                     <fa-icon [icon]="faPlus"></fa-icon>
                 </button>
             </div>
@@ -50,27 +50,27 @@
             <div class="d-flex gap-1 justify-content-end">
                 @if (!isEditing()) {
                     <button type="button" class="btn btn-info" (click)="handlePreview()" [disabled]="isLoading()"
-                        tooltip="View Filter">
+                        title="View Filter">
                         <fa-icon [icon]="faEye"></fa-icon>
                     </button>
                     <button type="button" class="btn btn-secondary" (click)="handleCopy()" [disabled]="isLoading()"
-                        tooltip="Copy Filter">
+                        title="Copy Filter">
                         <fa-icon [icon]="faCopy"></fa-icon>
                     </button>
                 }
                 @if (isEditing()) {
-                    <button type="button" class="btn btn-primary" (click)="handleUpdate()" tooltip="Save Filter"
+                    <button type="button" class="btn btn-primary" (click)="handleUpdate()" title="Save Filter"
                         [disabled]="isLoading() || !canSave()">
                         <fa-icon [icon]="faSave"></fa-icon>
                     </button>
-                    <button type="button" class="btn btn-danger" (click)="handleUndo()" tooltip="Undo Changes"
+                    <button type="button" class="btn btn-danger" (click)="handleUndo()" title="Undo Changes"
                         [disabled]="isLoading()">
                         <fa-icon [icon]="faUndo"></fa-icon>
                     </button>
                 }
                 @if (!isEditing()) {
                     <button type="button" class="btn btn-danger" (click)="handleDelete()" [disabled]="isLoading()"
-                        tooltip="Delete Filter">
+                        title="Delete Filter">
                         <fa-icon [icon]="faTrash"></fa-icon>
                     </button>
                 }

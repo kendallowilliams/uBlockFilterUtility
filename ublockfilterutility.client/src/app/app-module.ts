@@ -20,7 +20,6 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { FilterEffects } from './shared/stores/filter/filter.effects';
 import { FILTER_REDUCER_KEY, filtersReducers } from './shared/stores/filter/filters.reducer';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { MessageBoxModalComponent } from './components/modals/message-box-modal/message-box-modal.component';
 import { MessageBoxService } from './shared/services/message-box.service';
 import { ThemeService } from './shared/services/theme.service';
@@ -48,7 +47,6 @@ import { InjectionContextService } from './shared/services/injection-context.ser
     ModalDirective,
     StoreModule.forRoot({ [FILTER_REDUCER_KEY]: filtersReducers }),
     EffectsModule.forRoot(FilterEffects),
-    TooltipModule,
     FormField,
     FormRoot
 ],

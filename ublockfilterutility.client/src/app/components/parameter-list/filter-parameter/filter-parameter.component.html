@@ -1,10 +1,10 @@
 <div class="input-group w-auto">
     <div class="input-group-text fw-bold">{{param().key}}</div>
-    <button type="button" class="btn btn-sm btn-secondary" (click)="handleEdit()" tooltip="Edit Parameter"
+    <button type="button" class="btn btn-sm btn-secondary" (click)="handleEdit()" title="Edit Parameter"
         [disabled]="disabled()">
         <fa-icon [icon]="faPencil"></fa-icon>
     </button>
-    <button type="button" class="btn btn-sm btn-danger" (click)="handleRemove()" tooltip="Remove Parameter"
+    <button type="button" class="btn btn-sm btn-danger" (click)="handleRemove()" title="Remove Parameter"
         [disabled]="disabled()" container="body">
         <fa-icon [icon]="faTrash"></fa-icon>
     </button>

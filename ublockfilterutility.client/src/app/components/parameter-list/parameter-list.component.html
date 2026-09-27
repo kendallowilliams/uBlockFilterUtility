@@ -31,14 +31,14 @@
                         }</label>
                 </div>
                 @if (isEditing()) {
-                    <button type="button" class="btn btn-warning" (click)="handleParamClear()" tooltip="Clear Parameter">
+                    <button type="button" class="btn btn-warning" (click)="handleParamClear()" title="Clear Parameter">
                         <fa-icon [icon]="faEraser"></fa-icon>
                     </button>
-                    <button type="button" class="btn btn-success" (click)="handleParamSave()" tooltip="Save Parameter" [disabled]="!canSave()">
+                    <button type="button" class="btn btn-success" (click)="handleParamSave()" title="Save Parameter" [disabled]="!canSave()">
                         <fa-icon [icon]="faSave"></fa-icon>
                     </button>
                 } @else {
-                    <button type="button" class="btn btn-primary" (click)="handleParamAdd()" tooltip="Add Parameter">
+                    <button type="button" class="btn btn-primary" (click)="handleParamAdd()" title="Add Parameter">
                         <fa-icon [icon]="faPlus"></fa-icon>
                     </button>
                 }
