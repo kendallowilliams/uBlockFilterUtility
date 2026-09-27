@@ -8,12 +8,21 @@
         <div class="col">
             <div class="d-flex align-items-center">
                 <h4 class="flex-fill m-0 p-0">uBlock Filter Utility</h4>
-                 <div class="form-check form-switch">
-                    @let themeSwitchId = idGenerator$ | async;
-                    <input type="checkbox" role="switch" class="form-check-input" data-on-text="On" data-off-text="Off"
-                        id="{{themeSwitchId}}" [(ngModel)]="darkModeEnabled" />
-                    <label for="{{themeSwitchId}}">Dark Mode</label>
-                 </div>
+                <div>
+                    <div class="form-check form-switch">
+                        @let overrideSwitchId = idGenerator$ | async;
+                        <input type="checkbox" role="switch" class="form-check-input" id="{{overrideSwitchId}}" 
+                            [ngModel]="overrideOsThemeEnabled()" (ngModelChange)="themeService.setOverrideOsTheme($event)" />
+                        <label for="{{overrideSwitchId}}">Override OS Theme</label>
+                    </div>
+                        <div class="form-check form-switch">
+                        @let themeSwitchId = idGenerator$ | async;
+                        <input type="checkbox" role="switch" class="form-check-input"
+                            id="{{themeSwitchId}}" [ngModel]="darkModeEnabled()" (ngModelChange)="themeService.setDarkMode($event)" 
+                            [disabled]="!overrideOsThemeEnabled()" />
+                        <label for="{{themeSwitchId}}" [ngClass]="{'text-secondary': !overrideOsThemeEnabled()}">Dark Mode</label>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

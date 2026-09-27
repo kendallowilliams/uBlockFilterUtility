@@ -1,4 +1,4 @@
-import { Injectable, signal } from "@angular/core";
+import { effect, Injectable, RendererFactory2, signal } from "@angular/core";
 import { toObservable } from "@angular/core/rxjs-interop";
 import { Observable } from "rxjs";
 
@@ -7,20 +7,65 @@ import { Observable } from "rxjs";
 })
 export class ThemeService {
     private readonly darkModeKey = 'dark-mode-enabled';
-    private readonly darkModeEnabled = signal(false);
+    private readonly darkModeEnabled = signal(false, {});
+    private readonly overrideOsThemeEnabled = signal(false);
+    private readonly mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
-    constructor() {
-        this.darkModeEnabled.set(this.getDarkModeEnabledFromStorage());
+    constructor(private rendererFactory: RendererFactory2) {
+        const renderer = this.rendererFactory.createRenderer(null, null);
+        let unlistener: () => void;
+        const getOverride: () => boolean = () => !!localStorage.getItem(this.darkModeKey);
+
+        effect(() => {
+            unlistener?.();
+            if (!this.overrideOsThemeEnabled()) {
+                unlistener = renderer.listen(
+                    this.mediaQuery, 
+                    "change", 
+                    () => this.setOverrideOsTheme(getOverride())
+                );
+            }
+        });
+        this.overrideOsThemeEnabled.set(getOverride());
+        this.darkModeEnabled.set(this.overrideOsThemeEnabled() 
+            ? this.getDarkModeEnabledFromStorage() 
+            : this.getDarkModeEnabledFromSystem()
+        );
+        this.applyTheme(this.darkModeEnabled());
     }
 
     public setDarkMode(enabled: boolean): void {
-        if (enabled) {
+        if (this.overrideOsThemeEnabled()) {
             localStorage.setItem(this.darkModeKey, enabled ? 'true' : 'false');
+            this.darkModeEnabled.set(enabled);
+        }
+        this.applyTheme(enabled);
+    }
+
+    public applyTheme(enabled: boolean): void {
+        const renderer = this.rendererFactory.createRenderer(null, null);
+        
+        if (enabled) {
+            renderer.setAttribute(document.documentElement, 'data-bs-theme', 'dark');
+        } else {
+          renderer.removeAttribute(document.documentElement, 'data-bs-theme');
+        }
+    }
+
+    public setOverrideOsTheme(override: boolean): void {
+        if (override) {
+            localStorage.setItem(this.darkModeKey, this.getDarkModeEnabledFromSystem() ? 'true' : 'false');
         } else {
             localStorage.removeItem(this.darkModeKey);
         }
 
-        this.darkModeEnabled.set(enabled);
+        this.applyTheme(this.getDarkModeEnabledFromSystem());
+        this.darkModeEnabled.set(this.getDarkModeEnabledFromSystem());
+        this.overrideOsThemeEnabled.set(override);
+    }
+
+    public getOverrideOsTheme(): Observable<boolean> {
+        return toObservable(this.overrideOsThemeEnabled)
     }
 
     public getDarkModeEnabled(): Observable<boolean> {
@@ -29,5 +74,9 @@ export class ThemeService {
 
     private getDarkModeEnabledFromStorage(): boolean {
         return localStorage.getItem(this.darkModeKey) === 'true';
+    }
+
+    private getDarkModeEnabledFromSystem(): boolean {
+        return this.mediaQuery.matches;
     }
 }

@@ -2,7 +2,7 @@ import { Component, computed, DestroyRef, effect, inject, OnInit, Signal, signal
 import { faCopy, faEye, faFileExport, faPlus, faSave, faSpinner, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { FilterModel } from '../../shared/models/filter.model';
 import { FilterModalComponent } from '../modals/filter-modal/filter-modal.component';
-import { finalize, Observable, Subject, take, takeUntil } from 'rxjs';
+import { finalize, Observable, Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { FiltersApiActions } from '../../shared/stores/filter/filters.actions';
 import { selectFilters, selectFiltersLoading, selectIdMappings } from '../../shared/stores/filter/filters.selectors';
@@ -16,7 +16,6 @@ import { HtmlUtils } from '../../shared/utils/html.utilts';
 import { ThemeService } from '../../shared/services/theme.service';
 import { FieldTree, form, required, validate } from '@angular/forms/signals';
 import { FilterUtils } from '../../shared/utils/filter.utils';
-import { InjectionContextService } from '../../shared/services/injection-context.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -43,6 +42,7 @@ export class DashboardComponent implements OnInit {
     protected paramsChanged = signal<boolean>(false);
     protected idGenerator$: Observable<string> = HtmlUtils.getIdGenerator();
     protected darkModeEnabled = signal<boolean>(false);
+    protected overrideOsThemeEnabled = signal<boolean>(false);
     protected isEditing = computed(() => this.filterFormState().dirty());
     protected canSave = computed(() => this.filterFormState().valid());
 
@@ -50,28 +50,31 @@ export class DashboardComponent implements OnInit {
     private selectedFilterLocalId: string | null = null;
     private get initialModel(): FilterModel {
         return {Id: 0, Name: '', Parameters: {}, Template: ''};
-    }
+    };
+    private _filterForm: Signal<FieldTree<FilterModel>>;
+    private _filterFormState: FieldTree<FilterModel>;
 
     constructor(
         private bsModal: BsModalService,
         private store: Store<FilterState>, 
         private filterService: FilterService,
         private messageBoxService: MessageBoxService,
-        private themeService: ThemeService,
-        private injectionContextService: InjectionContextService
+        protected themeService: ThemeService
     ) {
         this.exportUrl = this.filterService.getExportUrl();
         effect(() => {
             this.loadSelectedFilter(this.selectedFilter());
         });
         this.themeService.getDarkModeEnabled()
-            .pipe(take(1))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(enabled => this.darkModeEnabled.set(enabled));
-        effect(() => {
-            this.themeService.setDarkMode(this.darkModeEnabled());
-        });
+        this.themeService.getOverrideOsTheme()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(override => this.overrideOsThemeEnabled.set(override));
         this.filterForm = signal<FieldTree<FilterModel>>(this.getFilterForm());
         this.filterFormState = this.filterForm();
+        this._filterForm = signal<FieldTree<FilterModel>>(this.getFilterForm());
+        this._filterFormState = this.filterForm();
     }
     
     public ngOnInit(): void {
@@ -92,19 +95,19 @@ export class DashboardComponent implements OnInit {
     protected handleAdd(): void {
         const addFn = () => {
             const destroySub = new Subject<void>();
-            const filterForm = this.getFilterForm(null);
             const context: ModalOptions<FilterModalComponent> = {
                 class: 'modal-lg modal-dialog-centered'
             };
             const modalRef = this.bsModal.show(FilterModalComponent, context);
 
-            modalRef.content?.form.set(filterForm);
+            this._filterFormState().reset();
+            modalRef.content?.form.set(this._filterForm());
             this.selectedFilterLocalId = HtmlUtils.generateId();
             modalRef.content?.addFilter
                 .subscribe(() => {
                     const request = {
                         id: this.selectedFilterLocalId!,
-                        filter: filterForm().value()
+                        filter: this._filterFormState().value()
                     };
                     this.store.dispatch(FiltersApiActions.addFilter({request}));
                 });
@@ -136,20 +139,20 @@ export class DashboardComponent implements OnInit {
     protected handleCopy(): void {
         const copyFn = () => {
             const destroySub = new Subject<void>();
-            const filterForm = this.getFilterForm({...this.selectedFilter()!, Name: '', Id: 0});
             const context: ModalOptions<FilterModalComponent> = {
                 class: 'modal-lg modal-dialog-centered'
             };
             const modalRef = this.bsModal.show(FilterModalComponent, context);
 
-            modalRef.content?.form.set(filterForm);
+            this._filterFormState().reset({...this.selectedFilter()!, Name: '', Id: 0})
+            modalRef.content?.form.set(this._filterForm());
             modalRef.content?.isCopy.set(true);
             this.selectedFilterLocalId = HtmlUtils.generateId();
             modalRef.content?.copyFilter
                 .subscribe(() => {
                     const request = {
                         id: this.selectedFilterLocalId!,
-                        filter: filterForm().value()
+                        filter: this._filterFormState().value()
                     };
                     this.store.dispatch(FiltersApiActions.addFilter({request}));
                 });
@@ -204,27 +207,23 @@ export class DashboardComponent implements OnInit {
     }
 
     private getFilterForm(filter?: FilterModel | null): FieldTree<FilterModel> {
-        let _form!: FieldTree<FilterModel>;
-        this.injectionContextService.runInInjectionContext(() => {
-            const model = signal(filter || this.initialModel);
-            _form = form(model, schema => {
-                required(schema.Name),
-                required(schema.Template),
-                validate(schema.Template, ({value, valueOf}) => {
-                    const parameters = FilterUtils.toParameterArray(valueOf(schema.Parameters)) || [];
-                    return FilterUtils.hasMissingParameters(value(), parameters) 
-                        ? 
-                        {
-                            kind: 'missing-parameters', 
-                            message: FilterUtils.getMissingParameters(value(), parameters).join(', ')
-                        } 
-                        : null
-                    }
-                )
-            });
-        });
+        const model = signal(filter || this.initialModel);
 
-        return _form;
+        return form(model, schema => {
+            required(schema.Name),
+            required(schema.Template),
+            validate(schema.Template, ({value, valueOf}) => {
+                const parameters = FilterUtils.toParameterArray(valueOf(schema.Parameters)) || [];
+                return FilterUtils.hasMissingParameters(value(), parameters) 
+                    ? 
+                    {
+                        kind: 'missing-parameters', 
+                        message: FilterUtils.getMissingParameters(value(), parameters).join(', ')
+                    } 
+                    : null
+                }
+            )
+        });
     }
 
     private loadSelectedFilter(filter: FilterModel | null): void {
