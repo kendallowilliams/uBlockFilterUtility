@@ -11,5 +11,5 @@ export interface ModalConfig<T> {
 export interface ModalContext {
     title: string;
     message: string;
-    response?: string;
+    initialValue?: string;
 };

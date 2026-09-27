@@ -3,8 +3,6 @@ import { FilterParameter, FilterParameters } from '../../shared/models/filter-pa
 import { disabled, form, FormValueControl, required, validate } from '@angular/forms/signals';
 import { faEraser, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import { MessageBoxService } from '../../shared/services/message-box.service';
-import { ModalConfig } from '../../shared/models/modal-config.model';
-import { MessageBoxModalComponent } from '../modals/message-box-modal/message-box-modal.component';
 import { FilterUtils } from '../../shared/utils/filter.utils';
 import { Observable } from 'rxjs';
 import { HtmlUtils } from '../../shared/utils/html.utilts';
@@ -27,15 +25,7 @@ export class ParameterListComponent implements FormValueControl<FilterParameters
         required(schema.value, {when: field => field.state.touched()}),
         disabled(schema.key, {when: () => !this.isEditing()}),
         disabled(schema.value, {when: () => !this.isEditing()}),
-        validate(schema.key, ({value}) => {
-            return FilterUtils.isDuplicateKey(value(), this.parameters()) 
-                ? 
-                {
-                    kind: 'duplicate'
-                } 
-                : null
-            }
-        )
+        validate(schema.key, ({value}) => FilterUtils.isDuplicateKey(value(), this.parameters()) ? { kind: 'duplicate' } : null)
     });
     protected isEditing = signal(false);
     protected canSave = computed(() => this.form().valid());
@@ -63,10 +53,16 @@ export class ParameterListComponent implements FormValueControl<FilterParameters
         const context = { 
             title: `Update "${param.key}"`, 
             message: 'Value',
-            initialResponse: param.value
+            initialValue: param.value
         };
 
-        this.messageBoxService.prompt(context);
+        this.messageBoxService.prompt(context)
+            .subscribe(response => {
+                let params = Object.assign({}, this.value());
+
+                params[param.key] = response;
+                this.value.set(params);
+            });
     }
 
 
