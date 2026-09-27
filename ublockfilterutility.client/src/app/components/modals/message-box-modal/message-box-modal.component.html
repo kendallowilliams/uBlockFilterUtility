@@ -19,7 +19,8 @@
         @case ('prompt') {
             @let txtAreaId = idGenerator$ | async;
             <div class="form-floating">
-                <textarea id="{{txtAreaId}}" [(ngModel)]="response" class="form-control" [style.height]="'200px'"></textarea>
+                <textarea id="{{txtAreaId}}" [(ngModel)]="response" class="form-control" 
+                    [style.height]="'200px'" [style.resize]="'none'"></textarea>
                 <label for="{{txtAreaId}}">{{context()?.message}}</label>
             </div>
         } 
