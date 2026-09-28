@@ -1,6 +1,8 @@
 using Jering.Javascript.NodeJS;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using uBlockFilterUtility.DbContexts;
+using uBlockFilterUtility.Server.HostedServices;
 using uBlockFilterUtility.Server.Settings;
 using uBlockFilterUtility.Services;
 
@@ -16,24 +18,29 @@ builder.Services.AddControllers().AddJsonOptions(config =>
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddScoped<FilterService>();
-builder.Services.AddDbContextFactory<uBlockContext>(options =>
+builder.Services.AddSingleton<FilterService>();
+builder.Services.AddDbContextFactory<uBlockContext>((provider, options) =>
 {
-    var config = appSettings.Get<AppSettings>();
-
-    if (string.IsNullOrWhiteSpace(config?.SqliteDataSourceRoot)) throw new NullReferenceException(nameof(AppSettings.SqliteDataSourceRoot));
-
-    string environment = builder.Environment.EnvironmentName,
-        applicationName = builder.Environment.ApplicationName,
-        dataSourcePath = Path.Combine(config.SqliteDataSourceRoot, applicationName, environment),
-        dataSource = Path.Combine(dataSourcePath, "sqlite.db");
-
-    if (!Directory.Exists(dataSourcePath)) Directory.CreateDirectory(dataSourcePath);
+    var _appSettings = provider.GetRequiredService<IOptions<AppSettings>>().Value;
+    string dataSource = Path.Combine(_appSettings.SqliteDataSourcePath, _appSettings.SqliteDbName);
 
     options.UseSqlite($"Data Source={dataSource}");
 });
-builder.Services.Configure<AppSettings>(appSettings);
+builder.Services
+    .Configure<AppSettings>(appSettings)
+    .Configure<AppSettings>(config => {
+        if (string.IsNullOrWhiteSpace(config?.SqliteDataSourceRoot)) throw new NullReferenceException(nameof(AppSettings.SqliteDataSourceRoot));
+
+        string environment = builder.Environment.EnvironmentName,
+            applicationName = builder.Environment.ApplicationName,
+            dataSourcePath = Path.Combine(config.SqliteDataSourceRoot, applicationName, environment);
+
+        if (!Directory.Exists(dataSourcePath)) Directory.CreateDirectory(dataSourcePath);
+
+        config.SqliteDataSourcePath = dataSourcePath;
+    });
 builder.Services.AddNodeJS();
+builder.Services.AddHostedService<BackupHostedService>();
 
 var app = builder.Build();
 
@@ -62,4 +69,4 @@ app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
 
-app.Run();
+await app.RunAsync();

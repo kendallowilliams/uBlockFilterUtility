@@ -1,4 +1,5 @@
 ﻿using Jering.Javascript.NodeJS;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -125,6 +126,60 @@ namespace uBlockFilterUtility.Services
             return await _nodeService.InvokeFromFileAsync<bool>(_settings.UboCoreNodeJsCommand, "isValid", args: [filters]);
         }
 
+        public async Task Backup(CancellationToken cancellationToken)
+        {
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                int milliSeconds = 24 * 60 * 60 * 1000 /*24 hours*/;
+
+                try
+                {
+                    string dateFormat = "yyyyMMdd";
+                    string timestamp = DateTime.Now.ToString(dateFormat);
+                    string backupsPath = Path.Combine(_settings.SqliteDataSourcePath, "Backups");
+                    string backupPath = Path.Combine(backupsPath, timestamp);
+
+                    if (!Directory.Exists(backupPath))
+                    {
+                        Directory.CreateDirectory(backupPath);
+                        string sourceConnString = $"Data Source={Path.Combine(_settings.SqliteDataSourcePath, _settings.SqliteDbName)}";
+                        string backupDbPath = Path.Combine(backupPath, _settings.SqliteBackupDbName);
+                        string backupDataString = $"Data Source={backupDbPath}";
+
+                        if (!File.Exists(backupDbPath))
+                        {
+                            using var source = new SqliteConnection(sourceConnString);
+                            using var backup = new SqliteConnection(backupDataString);
+
+                            source.Open();
+                            backup.Open();
+                            source.BackupDatabase(backup);
+                            source.Close();
+                            backup.Close();
+                        }
+                    }
+
+                    int intMinDate = int.Parse(DateTime.Now.AddDays(-_settings.RetentionDays)
+                        .ToString(dateFormat)); // Ex. 20260928
+                    var backupsToDelete = Directory.GetDirectories(backupsPath)
+                        .Where(d => int.TryParse(Path.GetFileName(d), out int intDate) && intDate < intMinDate)
+                        .ToList();
+
+                    foreach (string dir in backupsToDelete)
+                    {
+                        new DirectoryInfo(dir).Delete(true);
+                    }
+                }
+                catch
+                {
+
+                }
+                finally
+                {
+                    await Task.Delay(milliSeconds - 1000, cancellationToken);
+                }
+            }
+        }
 
         #endregion
 
