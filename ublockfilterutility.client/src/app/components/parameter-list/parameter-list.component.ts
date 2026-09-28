@@ -19,7 +19,7 @@ export class ParameterListComponent implements FormValueControl<FilterParameters
     protected faEraser = faEraser;
     protected faSave = faSave;
     protected parameters = computed<FilterParameter[]>(() => this.value() ? FilterUtils.toParameterArray(this.value()) : []);
-    protected model = signal<FilterParameter>({key: '', value: ''})
+    protected model = signal<FilterParameter>({key: '', value: ''});
     protected form = form<FilterParameter>(this.model, schema => {
         required(schema.key),
         required(schema.value),

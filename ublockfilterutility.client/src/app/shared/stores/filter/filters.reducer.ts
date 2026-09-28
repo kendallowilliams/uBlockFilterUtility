@@ -12,9 +12,11 @@ export const initialState: FilterState = {
 
 export const filtersReducers = createReducer(
     initialState,
+    // Get Filters
     on(FiltersApiActions.getFilters, _state => ({..._state, loading: true})),
     on(FiltersApiActions.getFiltersSuccess, (_state, {filters}) => ({..._state, filters, loading: false})),
     on(FiltersApiActions.getFiltersFailure, (_state) => ({..._state, loading: false})),
+    // Add Filter
     on(FiltersApiActions.addFilter, _state => ({..._state, loading: true})),
     on(FiltersApiActions.addFilterSuccess, (_state, {filter, localId}) => {
         const updatedFilters = _state.filters.concat(filter);
@@ -27,6 +29,7 @@ export const filtersReducers = createReducer(
         };
     }),
     on(FiltersApiActions.addFilterFailure, (_state) => ({..._state, loading: false})),
+    // Update Filter
     on(FiltersApiActions.updateFilter, _state => ({..._state, loading: true})),
     on(FiltersApiActions.updateFilterSuccess, (_state, {filter, localId}) => {
         const updatedFilters = _state.filters.filter(f => f.Id !== filter.Id).concat(filter);
@@ -39,6 +42,7 @@ export const filtersReducers = createReducer(
         };
     }),
     on(FiltersApiActions.updateFilterFailure, (_state) => ({..._state, loading: false})),
+    // Delete Filter
     on(FiltersApiActions.deleteFilter, _state => ({..._state, loading: true})),
     on(FiltersApiActions.deleteFilterSuccess, (_state, {id}) => 
         ({..._state, filters: _state.filters.filter(f => f.Id !== id), loading: false})

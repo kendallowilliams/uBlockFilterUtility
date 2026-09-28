@@ -74,7 +74,7 @@ export class DashboardComponent implements OnInit {
         this.filterForm = signal<FieldTree<FilterModel>>(this.getFilterForm());
         this.filterFormState = this.filterForm();
         this._filterForm = signal<FieldTree<FilterModel>>(this.getFilterForm());
-        this._filterFormState = this.filterForm();
+        this._filterFormState = this._filterForm();
     }
     
     public ngOnInit(): void {
