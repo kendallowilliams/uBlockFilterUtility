@@ -63,6 +63,8 @@ namespace uBlockFilterUtility.Server.Controllers
                     string.Join(Environment.NewLine, task.Result.Select(m => _filterService.GenerateFilters(m)))
                 );
 
+            Response.Headers.CacheControl = "no-cache";
+            Response.Headers.Expires = "0";
             return new FileContentResult(System.Text.Encoding.ASCII.GetBytes(contents), "text/plain");
         }
 
