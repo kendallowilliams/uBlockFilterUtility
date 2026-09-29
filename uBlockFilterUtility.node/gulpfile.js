@@ -1,5 +1,6 @@
 const gulp = require('gulp');
 const { gulpEsbuild } = require('gulp-esbuild');
+const minify = require('gulp-minify');
 
 gulp.task('default', function() {
     return gulp.src('./app.ts')
@@ -10,5 +11,8 @@ gulp.task('default', function() {
             entryPoints: ['./app.ts'],
             platform: 'node'
         }))
-        .pipe(gulp.dest('./dist'));
+    .pipe(minify({
+        ext: '.min.js'
+    }))
+    .pipe(gulp.dest('./dist'));
 });
