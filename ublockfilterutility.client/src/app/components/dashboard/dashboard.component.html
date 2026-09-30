@@ -31,11 +31,11 @@
     <div class="row flex-fill">
         <div class="col-3 border-end d-flex flex-column">
             <div class="d-flex gap-1 justify-content-end align-items-center">
-                <a class="btn btn-secondary btn-sm" [href]="exportUrl" download="filters.txt"
+                <a class="btn btn-secondary" [href]="exportUrl" download="filters.txt"
                     title="Export Filters" role="button" [ngClass]="{'disabled': isLoading() || isEditing()}">
                     <fa-icon [icon]="faFileExport"></fa-icon>
                 </a>
-                <button type="button" class="btn btn-sm btn-primary" (click)="handleAdd()" [disabled]="isLoading() || isEditing()"
+                <button type="button" class="btn btn-primary" (click)="handleAdd()" [disabled]="isLoading() || isEditing()"
                     title="Add Filter">
                     <fa-icon [icon]="faPlus"></fa-icon>
                 </button>
