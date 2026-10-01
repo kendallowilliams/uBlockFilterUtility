@@ -6,6 +6,5 @@ module.exports = {
         const isValid = filters.every(f => uboCore.isValid(f));
 
         callback(null, isValid);
-    
     }
 };
