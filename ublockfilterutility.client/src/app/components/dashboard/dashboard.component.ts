@@ -1,5 +1,5 @@
 import { Component, computed, DestroyRef, effect, inject, OnInit, Signal, signal, ViewChild, ViewContainerRef } from '@angular/core';
-import { faCopy, faEye, faFileExport, faPlus, faSave, faSpinner, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faFileExport, faPlus, faSave, faSpinner, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { FilterModel } from '../../shared/models/filter.model';
 import { FilterModalComponent } from '../modals/filter-modal/filter-modal.component';
 import { finalize, Observable, Subject, takeUntil } from 'rxjs';
@@ -29,7 +29,6 @@ export class DashboardComponent implements OnInit {
     protected faSave = faSave;
     protected faCopy = faCopy;
     protected faTrash = faTrash;
-    protected faEye = faEye;
     protected faPlus = faPlus;
     protected faFileExport = faFileExport;
     protected faSpinner = faSpinner;
@@ -169,20 +168,6 @@ export class DashboardComponent implements OnInit {
         } else {
             copyFn();
         }
-    }
-
-    protected handlePreview(): void {
-        const filter = this.selectedFilter()!;
-
-        this.isLoading.set(true);
-        this.filterService.getPreview(filter.Id!)
-            .pipe(finalize(() => this.isLoading.set(false)))
-            .subscribe(preview => {
-                this.messageBoxService.alert({
-                    title: `"${filter.Name!}" Preview`,
-                    message: preview
-                });
-            });
     }
 
     protected handleDelete(): void {

@@ -60,13 +60,13 @@
             <hr />
             <div class="d-flex gap-1 justify-content-end">
                 @if (!isEditing()) {
-                    <button type="button" class="btn btn-info" (click)="handlePreview()" [disabled]="isLoading()"
-                        title="View Filter">
-                        <fa-icon [icon]="faEye"></fa-icon>
-                    </button>
                     <button type="button" class="btn btn-secondary" (click)="handleCopy()" [disabled]="isLoading()"
                         title="Copy Filter">
                         <fa-icon [icon]="faCopy"></fa-icon>
+                    </button>
+                    <button type="button" class="btn btn-danger" (click)="handleDelete()" [disabled]="isLoading()"
+                        title="Delete Filter">
+                        <fa-icon [icon]="faTrash"></fa-icon>
                     </button>
                 }
                 @if (isEditing()) {
@@ -77,12 +77,6 @@
                     <button type="button" class="btn btn-primary" (click)="handleUpdate()" title="Save Filter"
                         [disabled]="isLoading() || !canSave()">
                         <fa-icon [icon]="faSave"></fa-icon>
-                    </button>
-                }
-                @if (!isEditing()) {
-                    <button type="button" class="btn btn-danger" (click)="handleDelete()" [disabled]="isLoading()"
-                        title="Delete Filter">
-                        <fa-icon [icon]="faTrash"></fa-icon>
                     </button>
                 }
             </div>
