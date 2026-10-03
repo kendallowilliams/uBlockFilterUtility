@@ -50,19 +50,21 @@ export class ParameterListComponent implements FormValueControl<FilterParameters
     }
 
     protected handleParamEdit(param: FilterParameter): void {
+        const initialValue = param.value;
         const context = { 
             title: `Update "${param.key}"`, 
             message: 'Value',
-            initialValue: param.value
+            initialValue
         };
 
         this.messageBoxService.prompt(context)
             .subscribe(response => {
+                if (response !== initialValue) {
                 let params = Object.assign({}, this.value());
 
                 params[param.key] = response;
                 this.value.set(params);
-            });
+            }});
     }
 
 
