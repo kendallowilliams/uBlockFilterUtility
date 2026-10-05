@@ -12,10 +12,10 @@ export class FilterModalComponent {
     public form = model<FieldTree<FilterModel>>();
     public isCopy = model(false);
 
-    public formState = computed(() => this.form()?.());
-
     public addFilter = output();
     public copyFilter = output();
+
+    protected formState = computed(() => this.form()?.());
 
     constructor(protected modalRef: BsModalRef) {}
 

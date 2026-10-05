@@ -1,6 +1,6 @@
-import { Component, model } from "@angular/core";
+import { Component, computed, model } from "@angular/core";
 import { FilterModel } from "../../shared/models/filter.model";
-import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { faCircleExclamation, faToiletPaper } from "@fortawesome/free-solid-svg-icons";
 import { FieldTree } from "@angular/forms/signals";
 
 @Component({
@@ -13,5 +13,8 @@ export class FilterComponent {
     public isFilterValid = model(true);
     public isEdit = model(false);
 
+    protected formState = computed(() => this.form()?.());
+    protected isDirty = computed(() => this.formState().dirty());
     protected faCircleExclamation = faCircleExclamation;
+    protected faToiletPaper = faToiletPaper;
 }

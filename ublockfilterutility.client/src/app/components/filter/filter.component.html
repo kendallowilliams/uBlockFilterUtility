@@ -5,6 +5,9 @@
             {
                 <h4 class="fst-italic">
                     <span>{{form().Name().value()}}</span>&nbsp;
+                    @if (isDirty()) {
+                        <fa-icon [icon]="faToiletPaper" class="text-warning"></fa-icon>
+                    }
                     @if (!isFilterValid()) {
                         <fa-icon [icon]="faCircleExclamation" class="text-danger"></fa-icon>
                     }

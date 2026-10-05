@@ -70,11 +70,11 @@
                     </button>
                 }
                 @if (isEditing()) {
-                    <button type="button" class="btn btn-secondary" (click)="handleUndo()" title="Undo Changes"
+                    <button type="button" class="btn btn-warning" (click)="handleUndo()" title="Undo Changes"
                         [disabled]="isLoading()">
                         <fa-icon [icon]="faUndo"></fa-icon>
                     </button>
-                    <button type="button" class="btn btn-primary" (click)="handleUpdate()" title="Save Filter"
+                    <button type="button" class="btn btn-success" (click)="handleUpdate()" title="Save Filter"
                         [disabled]="isLoading() || !canSave()">
                         <fa-icon [icon]="faSave"></fa-icon>
                     </button>
