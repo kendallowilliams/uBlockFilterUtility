@@ -1,6 +1,6 @@
 import { Component, effect, model, output, signal } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { ModalContext, MessageBoxModalType } from '../../../shared/models/modal-config.model';
+import { ModalContext, MessageBoxModalType } from '../../../shared/models/modal-context.model';
 import { Observable } from 'rxjs';
 import { HtmlUtils } from '../../../shared/utils/html.utilts';
 import { faCircleQuestion, faCircleXmark, faWarning } from '@fortawesome/free-solid-svg-icons';
