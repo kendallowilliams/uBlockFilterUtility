@@ -5,7 +5,7 @@ import { BsModalRef, BsModalService, ModalOptions } from "ngx-bootstrap/modal";
     selector: 'ng-template[appModal]'
 })
 export class ModalDirective {
-    public options = input<ModalOptions<any> | null>(null);
+    public options = input<ModalOptions<any> | undefined>();
 
     public isOpen = model(false);
     private modalRef?: BsModalRef | null;
@@ -21,7 +21,7 @@ export class ModalDirective {
     }
 
     public show(): void {
-        this.modalRef = this.bsModal.show(this.templateRef, this.options() || {});
+        this.modalRef = this.bsModal.show(this.templateRef, this.options());
     }
 
     public hide(): void {
