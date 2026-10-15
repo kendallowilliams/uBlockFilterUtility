@@ -219,7 +219,6 @@ export class DashboardComponent implements OnInit {
             
             this.filterFormState().reset(filter);
             componentRef.instance.form.set(this.filterForm());
-            componentRef.instance.isEdit.set(true);
             this.getIsFilterValid(filter.Id!, (isValid) => componentRef.instance.isFilterValid.set(isValid));
         }
     }

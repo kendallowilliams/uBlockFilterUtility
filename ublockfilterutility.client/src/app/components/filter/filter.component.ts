@@ -11,10 +11,9 @@ import { FieldTree } from "@angular/forms/signals";
 export class FilterComponent {
     public form = model.required<FieldTree<FilterModel>>();
     public isFilterValid = model(true);
-    public isEdit = model(false);
+    public isEdit = computed(() => this.form().Id().value() > 0);
 
-    protected formState = computed(() => this.form()?.());
-    protected isDirty = computed(() => this.formState().dirty());
+    protected isDirty = computed(() => this.form()().dirty());
     protected faCircleExclamation = faCircleExclamation;
     protected faToiletPaper = faToiletPaper;
 }
