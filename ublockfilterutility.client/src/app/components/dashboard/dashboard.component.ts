@@ -218,8 +218,8 @@ export class DashboardComponent implements OnInit {
             const componentRef = this.filterContainer.createComponent(FilterComponent);
             
             this.filterFormState().reset(filter);
-            componentRef.instance.form.set(this.filterForm());
-            this.getIsFilterValid(filter.Id!, (isValid) => componentRef.instance.isFilterValid.set(isValid));
+            componentRef.setInput('form', this.filterForm());
+            this.getIsFilterValid(filter.Id!, (isValid) => componentRef.setInput('isFilterValid', isValid));
         }
     }
 
