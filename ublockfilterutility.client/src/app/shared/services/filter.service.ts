@@ -3,6 +3,7 @@ import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { FilterModel } from "../models/filter.model";
 import { APP_BASE_HREF } from "@angular/common";
+import { AppConfig } from "../models/app-config.model";
 
 @Injectable({
     providedIn: 'root'
@@ -38,4 +39,8 @@ export class FilterService {
     }
 
     public getExportUrl: () => string = (): string => `${this.apiUrl}/Generate`;
+
+    public getAppConfig(): Observable<AppConfig> {
+      return this.http.get<AppConfig>(`${this.apiUrl}/GetAppConfig`);
+    }
 }

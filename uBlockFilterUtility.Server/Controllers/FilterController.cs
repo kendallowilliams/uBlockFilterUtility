@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using uBlockFilterUtility.Models;
+using uBlockFilterUtility.Server.Settings;
 using uBlockFilterUtility.Services;
 
 namespace uBlockFilterUtility.Server.Controllers
@@ -9,10 +11,12 @@ namespace uBlockFilterUtility.Server.Controllers
     public class FilterController : ControllerBase
     {
         private readonly FilterService _filterService;
+        private readonly AppSettings _appSettings;
 
-        public FilterController(FilterService filterService)
+        public FilterController(FilterService filterService, IOptions<AppSettings> appSettings)
         {
             _filterService = filterService;
+            _appSettings = appSettings.Value;
         }
 
         [HttpGet]
@@ -73,6 +77,17 @@ namespace uBlockFilterUtility.Server.Controllers
         {
             bool isValid = await _filterService.IsFilterValid(id);
             return new JsonResult(isValid);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAppConfig()
+        {
+            var config = new
+            {
+                UpdateListsUrl = $"{_appSettings.UpdateListsUrl}{_appSettings.ListKeysCsv}"
+            };
+
+            return new JsonResult(config);
         }
     }
 }

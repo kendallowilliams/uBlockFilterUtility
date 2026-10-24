@@ -13,5 +13,9 @@
         public string SqliteBackupDbName { get => "sqlite_backup.db"; }
 
         public int RetentionDays { get; set; } = 15;
+
+        public required string UpdateListsUrl { get; set; }
+
+        public string ListKeysCsv { get; set; } = string.Empty;
     }
 }

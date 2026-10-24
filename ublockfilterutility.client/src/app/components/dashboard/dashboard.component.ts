@@ -1,5 +1,5 @@
 import { Component, computed, DestroyRef, effect, inject, OnInit, Signal, signal, ViewChild, ViewContainerRef } from '@angular/core';
-import { faCopy, faFileExport, faPlus, faSave, faSpinner, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faFileExport, faPlus, faRotate, faSave, faSpinner, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { FilterModel } from '../../shared/models/filter.model';
 import { FilterModalComponent } from '../modals/filter-modal/filter-modal.component';
 import { finalize, Observable, Subject, takeUntil } from 'rxjs';
@@ -33,9 +33,11 @@ export class DashboardComponent implements OnInit {
     protected faFileExport = faFileExport;
     protected faSpinner = faSpinner;
     protected faUndo = faUndo;
+    protected faRotate = faRotate;
     protected isLoading = signal<boolean>(false);
     protected filters$?: Observable<FilterModel[]>;
     protected readonly exportUrl?: string;
+    protected updateListsUrl?: string;
     protected filterForm: Signal<FieldTree<FilterModel>>;
     protected filterFormState: FieldTree<FilterModel>;
     protected paramsChanged = signal<boolean>(false);
@@ -74,6 +76,8 @@ export class DashboardComponent implements OnInit {
         this.filterFormState = this.filterForm();
         this._filterForm = signal<FieldTree<FilterModel>>(this.getFilterForm());
         this._filterFormState = this._filterForm();
+        this.filterService.getAppConfig()
+            .subscribe(config => this.updateListsUrl = config.UpdateListsUrl);
     }
     
     public ngOnInit(): void {
