@@ -22,9 +22,6 @@
     "gulp-minify": "^3.1.0",
     "typescript": "^7.0.2"
   },
-  "dependencies": {
-    "@gorhill/ubo-core": "^0.1.30"
-  },
   "allowScripts": {
     "esbuild@0.28.2": true
   }
