@@ -3,7 +3,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    //"rootDir": ".",
+    "rootDir": "../uBlock/src/js",
     //"outDir": "./src/types",
     "types": [],
 
@@ -14,6 +14,6 @@
     "allowJs": true
   },
   "files": [],
-  "include": ["./node_modules/@gorhill/**/*.js"],
-  "exclude": ["./node_modules/@gorhill/**/biditrie.js", "./node_modules/@gorhill/**/hntrie.js"]
+  "include": ["/**/*.js"],
+  "exclude": ["biditrie.js", "hntrie.js"]
 }

@@ -1,4 +1,4 @@
-import { AstFilterParser } from '@gorhill/ubo-core/js/static-filtering-parser';
+import { AstFilterParser } from '../../uBlock/src/js/static-filtering-parser';
 
 export class UboCore {
     public isValid(input: string): boolean {
