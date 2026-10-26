@@ -1,3 +1,4 @@
 [submodule "uBlock"]
 	path = uBlock
 	url = https://github.com/gorhill/uBlock.git
+	ignore = dirty

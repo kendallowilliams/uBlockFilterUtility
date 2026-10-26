@@ -19,6 +19,7 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true
   },
+  "typeRoots": ["../uBlock/src/js", "./node_modules/@types"],
   "files": [],
   "references": [
     {

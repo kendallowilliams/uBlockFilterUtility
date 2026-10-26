@@ -3,7 +3,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDir": "../uBlock/src/js",
+    //"rootDir": ".",
     //"outDir": "./src/types",
     "types": [],
 
@@ -14,6 +14,19 @@
     "allowJs": true
   },
   "files": [],
-  "include": ["/**/*.js"],
-  "exclude": ["biditrie.js", "hntrie.js"]
+  "include": ["../uBlock/src/js/**/*.js"],
+  "exclude": [
+    "../uBlock/src/js/biditrie.js", 
+    "../uBlock/src/js/hntrie.js", 
+    "../uBlock/src/js/static-net-filtering.js", 
+    "../uBlock/src/js/benchmarks.js", 
+    "../uBlock/src/js/messaging.js", 
+    "../uBlock/src/js/pagestore.js", 
+    "../uBlock/src/js/reverselookup.js", 
+    "../uBlock/src/js/start.js", 
+    "../uBlock/src/js/static-dnr-filtering.js", 
+    "../uBlock/src/js/storage.js", 
+    "../uBlock/src/js/tab.js", 
+    "../uBlock/src/js/traffic.js"
+  ]
 }
