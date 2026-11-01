@@ -107,5 +107,14 @@ namespace uBlockFilterUtility.Server.Controllers
             var model = await _scriptletService.Update(scriptlet);
             return new JsonResult(model);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ScriptletJs()
+        {
+            var scriptletJs = await _scriptletService
+                .GetList()
+                .ContinueWith(t => t.Result?.FirstOrDefault()?.Template);
+            return new JsonResult(scriptletJs);
+        }
     }
 }
