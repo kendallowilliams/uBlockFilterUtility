@@ -113,8 +113,8 @@ namespace uBlockFilterUtility.Server.Controllers
         {
             var scriptletJs = await _scriptletService
                 .GetList()
-                .ContinueWith(t => t.Result?.FirstOrDefault()?.Template);
-            return new JsonResult(scriptletJs);
+                .ContinueWith(t => t.Result?.FirstOrDefault()?.Template ?? string.Empty);
+            return new FileContentResult(System.Text.Encoding.ASCII.GetBytes(scriptletJs), "text/javascript");
         }
     }
 }
