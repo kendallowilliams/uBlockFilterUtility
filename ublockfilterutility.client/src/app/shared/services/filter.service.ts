@@ -1,9 +1,10 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { FilterModel } from "../models/filter.model";
 import { APP_BASE_HREF } from "@angular/common";
 import { AppConfig } from "../models/app-config.model";
+import { ScriptletModel } from "../models/scriptlet.model";
 
 @Injectable({
     providedIn: 'root'
@@ -42,5 +43,15 @@ export class FilterService {
 
     public getAppConfig(): Observable<AppConfig> {
       return this.http.get<AppConfig>(`${this.apiUrl}/GetAppConfig`);
+    }
+
+    public getScriptlet(): Observable<ScriptletModel> {
+        return this.http.get<ScriptletModel>(`${this.apiUrl}/Scriptlet`);
+    }
+
+    public updateScriptlet(scriptlet: string): Observable<ScriptletModel> {
+        const formData = new FormData();
+        formData.set('scriptlet', scriptlet);
+        return this.http.post<ScriptletModel>(`${this.apiUrl}/Scriptlet`, formData);
     }
 }

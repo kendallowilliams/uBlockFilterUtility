@@ -1,5 +1,6 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { ApiFilterRequest, FilterModel } from '../../models/filter.model';
+import { ScriptletModel } from '../../models/scriptlet.model';
 
 export const FiltersApiActions = createActionGroup({
     source: 'Filters/API',
@@ -15,6 +16,14 @@ export const FiltersApiActions = createActionGroup({
         'Delete Filter Failure': props<{error: string}>(),
         'Get Filters': emptyProps(),
         'Get Filters Success': props<{filters: FilterModel[]}>(),
-        'Get Filters Failure': props<{error: string}>()
+        'Get Filters Failure': props<{error: string}>(),
+
+        'Get Scriptlet': emptyProps(),
+        'Get Scriptlet Success': props<{scriptlet: ScriptletModel}>(),
+        'Get Scriptlet Failure': props<{error: string}>(),
+
+        'Update Scriptlet': props<{scriptlet: string}>(),
+        'Update Scriptlet Success': props<{scriptlet: ScriptletModel}>(),
+        'Update Scriptlet Failure': props<{error: string}>()
     }
 });

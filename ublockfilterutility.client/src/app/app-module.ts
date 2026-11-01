@@ -26,6 +26,7 @@ import { ThemeService } from './shared/services/theme.service';
 import { ParameterListComponent } from './components/parameter-list/parameter-list.component';
 import { FormField, FormRoot } from '@angular/forms/signals';
 import { InjectionContextService } from './shared/services/injection-context.service';
+import { DashboardButtonsComponent } from './components/dashboard/dashboard-buttons/dashboard-buttons.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { InjectionContextService } from './shared/services/injection-context.ser
     FilterParameterComponent,
     MessageBoxModalComponent,
     ParameterListComponent,
+    DashboardButtonsComponent
   ],
   imports: [
     BrowserModule,

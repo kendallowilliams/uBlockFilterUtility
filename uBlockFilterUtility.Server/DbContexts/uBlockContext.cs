@@ -8,6 +8,7 @@ namespace uBlockFilterUtility.DbContexts
         public uBlockContext(DbContextOptions options) : base(options) {}
 
         public DbSet<Filter> Filters { get; set; }
+        public DbSet<Scriptlet> Scriptlets { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {

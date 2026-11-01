@@ -37,6 +37,25 @@ namespace uBlockFilterUtility.Server.Migrations
 
                     b.ToTable("Filters");
                 });
+
+            modelBuilder.Entity("uBlockFilterUtility.Entities.Scriptlet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Template")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Scriptlets");
+                });
 #pragma warning restore 612, 618
         }
     }

@@ -1,11 +1,11 @@
 import { Component, computed, DestroyRef, effect, inject, OnInit, Signal, signal, ViewChild, ViewContainerRef } from '@angular/core';
-import { faCopy, faFileExport, faPlus, faRotate, faSave, faSpinner, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faSave, faSpinner, faTrash, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { FilterModel } from '../../shared/models/filter.model';
 import { FilterModalComponent } from '../modals/filter-modal/filter-modal.component';
 import { finalize, Observable, Subject, takeUntil } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { FiltersApiActions } from '../../shared/stores/filter/filters.actions';
-import { selectFilters, selectFiltersLoading, selectIdMappings } from '../../shared/stores/filter/filters.selectors';
+import { selectFilters, selectFiltersLoading, selectIdMappings, selectScriptlet } from '../../shared/stores/filter/filters.selectors';
 import { FilterService } from '../../shared/services/filter.service';
 import { FilterState } from '../../shared/stores/filter/filter.state';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -16,6 +16,7 @@ import { HtmlUtils } from '../../shared/utils/html.utilts';
 import { ThemeService } from '../../shared/services/theme.service';
 import { FieldTree, form, required, validate } from '@angular/forms/signals';
 import { FilterUtils } from '../../shared/utils/filter.utils';
+import { ModalContext } from '../../shared/models/modal-context.model';
 
 @Component({
     selector: 'app-dashboard',
@@ -29,15 +30,10 @@ export class DashboardComponent implements OnInit {
     protected faSave = faSave;
     protected faCopy = faCopy;
     protected faTrash = faTrash;
-    protected faPlus = faPlus;
-    protected faFileExport = faFileExport;
     protected faSpinner = faSpinner;
     protected faUndo = faUndo;
-    protected faRotate = faRotate;
     protected isLoading = signal<boolean>(false);
     protected filters$?: Observable<FilterModel[]>;
-    protected readonly exportUrl?: string;
-    protected updateListsUrl?: string;
     protected filterForm: Signal<FieldTree<FilterModel>>;
     protected filterFormState: FieldTree<FilterModel>;
     protected paramsChanged = signal<boolean>(false);
@@ -54,6 +50,7 @@ export class DashboardComponent implements OnInit {
     };
     private _filterForm: Signal<FieldTree<FilterModel>>;
     private _filterFormState: FieldTree<FilterModel>;
+    private scriptlet?: string;
 
     constructor(
         private bsModal: BsModalService,
@@ -62,7 +59,6 @@ export class DashboardComponent implements OnInit {
         private messageBoxService: MessageBoxService,
         protected themeService: ThemeService
     ) {
-        this.exportUrl = this.filterService.getExportUrl();
         effect(() => {
             this.loadSelectedFilter(this.selectedFilter());
         });
@@ -76,12 +72,11 @@ export class DashboardComponent implements OnInit {
         this.filterFormState = this.filterForm();
         this._filterForm = signal<FieldTree<FilterModel>>(this.getFilterForm());
         this._filterFormState = this._filterForm();
-        this.filterService.getAppConfig()
-            .subscribe(config => this.updateListsUrl = config.UpdateListsUrl);
     }
     
     public ngOnInit(): void {
         this.store.dispatch(FiltersApiActions.getFilters());
+        this.store.dispatch(FiltersApiActions.getScriptlet());
         this.filters$ = this.store.select(selectFilters);
         this.store.select(selectFiltersLoading)
             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -93,6 +88,9 @@ export class DashboardComponent implements OnInit {
                 this.selectedFilter.set(filter);
                 this.selectedFilterLocalId = null;
             });
+        this.store.select(selectScriptlet)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(model => this.scriptlet = model?.Template);
     }
 
     protected handleAdd(): void {
@@ -127,6 +125,20 @@ export class DashboardComponent implements OnInit {
         } else {
             addFn();
         }
+    }
+
+    protected handleScriptletEdit(): void {
+        const context: ModalContext = { 
+            title: 'Edit Scriptlet', 
+            message: 'Scriptlet',
+            initialValue: this.scriptlet
+        };
+
+        this.messageBoxService
+            .prompt(context)
+            .subscribe(scriptlet => {
+                this.store.dispatch(FiltersApiActions.updateScriptlet({scriptlet}));
+            });
     }
 
     protected handleUpdate(): void {

@@ -1,0 +1,18 @@
+<div class="d-flex gap-1 justify-content-end align-items-center">
+    <a class="btn btn-secondary" [href]="updateListsUrl" target="_blank"
+        title="Update Filter Lists" role="button" [ngClass]="{'disabled': disabled()}">
+        <fa-icon [icon]="faRotate"></fa-icon>
+    </a>
+    <a class="btn btn-secondary" [href]="exportUrl" download="filters.txt"
+        title="Export Filters" role="button" [ngClass]="{'disabled': disabled()}">
+        <fa-icon [icon]="faFileExport"></fa-icon>
+    </a>
+    <button type="button" class="btn btn-secondary" (click)="handleEditScriptlet()" [disabled]="disabled()"
+        title="Edit Scriptlet">
+        <fa-icon [icon]="faScroll"></fa-icon>
+    </button>
+    <button type="button" class="btn btn-primary" (click)="handleAddFilter()" [disabled]="disabled()"
+        title="Add Filter">
+        <fa-icon [icon]="faPlus"></fa-icon>
+    </button>
+</div>

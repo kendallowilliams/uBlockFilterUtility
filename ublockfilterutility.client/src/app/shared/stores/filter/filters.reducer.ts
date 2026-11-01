@@ -6,6 +6,7 @@ export const FILTER_REDUCER_KEY = 'filters';
 
 export const initialState: FilterState = {
     filters: [],
+    scriptlet: null,
     idMappings: {},
     loading: false
 };
@@ -47,5 +48,15 @@ export const filtersReducers = createReducer(
     on(FiltersApiActions.deleteFilterSuccess, (_state, {id}) => 
         ({..._state, filters: _state.filters.filter(f => f.Id !== id), loading: false})
     ),
-    on(FiltersApiActions.deleteFilterFailure, (_state) => ({..._state, loading: false}))
+    on(FiltersApiActions.deleteFilterFailure, (_state) => ({..._state, loading: false})),
+
+    // Get Scriptlet
+    on(FiltersApiActions.getScriptlet, _state => ({..._state, loading: true})),
+    on(FiltersApiActions.getScriptletSuccess, (_state, {scriptlet}) => ({..._state, scriptlet, loading: false})),
+    on(FiltersApiActions.getScriptletFailure, (_state) => ({..._state, loading: false})),
+
+    // Update Scriptlet
+    on(FiltersApiActions.updateScriptlet, _state => ({..._state, loading: true})),
+    on(FiltersApiActions.updateScriptletSuccess, (_state, {scriptlet}) => ({..._state, scriptlet, loading: false})),
+    on(FiltersApiActions.updateScriptletFailure, (_state) => ({..._state, loading: false})),
 );

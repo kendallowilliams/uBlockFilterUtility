@@ -5,6 +5,7 @@ import { FiltersApiActions } from './filters.actions';
 import { catchError, map, of, switchMap, tap } from 'rxjs';
 import { FilterModel } from '../../models/filter.model';
 import { MessageBoxService } from '../../services/message-box.service';
+import { ScriptletModel } from '../../models/scriptlet.model';
 
 @Injectable()
 export class FilterEffects {
@@ -74,6 +75,29 @@ export class FilterEffects {
             )
         ), {
             dispatch: false
-        }
-    )
+        });
+
+    public getScriptlet$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(FiltersApiActions.getScriptlet),
+            switchMap(() =>
+                this.filterService.getScriptlet()
+                    .pipe(
+                        map((scriptlet: ScriptletModel) => FiltersApiActions.getScriptletSuccess({scriptlet})),
+                        catchError(() => of(FiltersApiActions.getScriptletFailure({error: 'Failed to get scriptlet.'})))
+                    )
+            )
+        ));
+
+    public updateScriptlet$ = createEffect(() =>
+        this.actions$.pipe(
+            ofType(FiltersApiActions.updateScriptlet),
+            switchMap(state =>
+                this.filterService.updateScriptlet(state.scriptlet)
+                    .pipe(
+                        map((scriptlet: ScriptletModel) => FiltersApiActions.updateScriptletSuccess({scriptlet})),
+                        catchError(() => of(FiltersApiActions.updateScriptletFailure({error: 'Failed to update scriptlet.'})))
+                    )
+            )
+        ));
 }

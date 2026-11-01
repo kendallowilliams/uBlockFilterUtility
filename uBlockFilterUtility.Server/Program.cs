@@ -19,6 +19,7 @@ builder.Services.AddControllers().AddJsonOptions(config =>
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSingleton<FilterService>();
+builder.Services.AddSingleton<ScriptletService>();
 builder.Services.AddDbContextFactory<uBlockContext>((provider, options) =>
 {
     var _appSettings = provider.GetRequiredService<IOptions<AppSettings>>().Value;

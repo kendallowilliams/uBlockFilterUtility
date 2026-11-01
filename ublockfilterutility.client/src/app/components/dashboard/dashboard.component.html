@@ -30,20 +30,8 @@
     <hr />
     <div class="row flex-fill">
         <div class="col-3 border-end d-flex flex-column">
-            <div class="d-flex gap-1 justify-content-end align-items-center">
-                <a class="btn btn-secondary" [href]="updateListsUrl" target="_blank"
-                    title="Update Filter Lists" role="button" [ngClass]="{'disabled': isLoading() || isEditing()}">
-                    <fa-icon [icon]="faRotate"></fa-icon>
-                </a>
-                <a class="btn btn-secondary" [href]="exportUrl" download="filters.txt"
-                    title="Export Filters" role="button" [ngClass]="{'disabled': isLoading() || isEditing()}">
-                    <fa-icon [icon]="faFileExport"></fa-icon>
-                </a>
-                <button type="button" class="btn btn-primary" (click)="handleAdd()" [disabled]="isLoading() || isEditing()"
-                    title="Add Filter">
-                    <fa-icon [icon]="faPlus"></fa-icon>
-                </button>
-            </div>
+            <app-dashboard-buttons [disabled]="isLoading() || isEditing()" 
+                (filterAdd)="handleAdd()" (scriptletEdit)="handleScriptletEdit()"></app-dashboard-buttons>
             <hr />
             <div class="form-floating">
                 @let selFiltersId = idGenerator$ | async;

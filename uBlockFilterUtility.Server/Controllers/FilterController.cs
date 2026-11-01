@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.VisualBasic;
+using System.Text.Json.Nodes;
 using uBlockFilterUtility.Models;
 using uBlockFilterUtility.Server.Settings;
 using uBlockFilterUtility.Services;
@@ -12,11 +14,13 @@ namespace uBlockFilterUtility.Server.Controllers
     {
         private readonly FilterService _filterService;
         private readonly AppSettings _appSettings;
+        private readonly ScriptletService _scriptletService;
 
-        public FilterController(FilterService filterService, IOptions<AppSettings> appSettings)
+        public FilterController(FilterService filterService, IOptions<AppSettings> appSettings, ScriptletService scriptletService)
         {
             _filterService = filterService;
             _appSettings = appSettings.Value;
+            _scriptletService = scriptletService;
         }
 
         [HttpGet]
@@ -88,6 +92,20 @@ namespace uBlockFilterUtility.Server.Controllers
             };
 
             return new JsonResult(config);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Scriptlet()
+        {
+            var scriptlets = await _scriptletService.GetList();
+            return new JsonResult(scriptlets.FirstOrDefault());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Scriptlet([FromForm]string scriptlet)
+        {
+            var model = await _scriptletService.Update(scriptlet);
+            return new JsonResult(model);
         }
     }
 }

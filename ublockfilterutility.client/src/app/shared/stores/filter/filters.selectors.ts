@@ -20,3 +20,8 @@ export const selectFiltersLoading = createSelector(
     selectFiltersState,
     (state: FilterState) => state.loading
 );
+
+export const selectScriptlet = createSelector(
+    selectFiltersState,
+    (state: FilterState) => state.scriptlet
+);
